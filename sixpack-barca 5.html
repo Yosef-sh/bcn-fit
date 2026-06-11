@@ -1,0 +1,2171 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>BCN Ready — Yosef</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html{scroll-behavior:smooth;}
+:root{
+  --white:#ffffff;
+  --off:#f8f7f4;
+  --light:#f0eeea;
+  --border:#e6e4df;
+  --text:#141210;
+  --muted:#8a8680;
+  --dim:#c8c4bc;
+  --black:#141210;
+  --barca-blue:#004D98;
+  --barca-red:#A50044;
+  --barca-gold:#EDBB00;
+  --blue-light:#e8eff9;
+  --red-light:#fce8f0;
+  --gold-light:#fdf7e0;
+  --green:#1a6b3a;
+  --green-light:#e8f5ee;
+  --green-mid:#3db870;
+  --orange:#d45a14;
+  --orange-light:#fdf0e8;
+  --r:16px;--rs:10px;
+  --font:'Outfit',sans-serif;
+  --body:'Inter',sans-serif;
+}
+body{font-family:var(--body);background:var(--off);color:var(--text);min-height:100vh;overflow-x:hidden;}
+
+/* ── SPLASH ── */
+#splash{
+  position:fixed;inset:0;z-index:9999;overflow:hidden;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  background:var(--barca-blue);
+  transition:opacity 0.7s ease,transform 0.7s ease;
+}
+#splash.hide{opacity:0;pointer-events:none;transform:scale(1.05);}
+
+.splash-stripes{
+  position:absolute;inset:0;
+  background:repeating-linear-gradient(
+    90deg,
+    var(--barca-blue) 0px,
+    var(--barca-blue) 60px,
+    var(--barca-red) 60px,
+    var(--barca-red) 120px
+  );
+  opacity:0.15;
+}
+.splash-content{position:relative;text-align:center;}
+.splash-crest{
+  font-size:64px;margin-bottom:16px;
+  animation:popIn 0.7s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+.splash-title{
+  font-family:var(--font);font-size:38px;font-weight:900;
+  color:var(--white);letter-spacing:-2px;line-height:1;
+  animation:popIn 0.7s 0.1s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+.splash-title span{color:var(--barca-gold);}
+.splash-name{
+  font-family:var(--font);font-size:15px;font-weight:500;
+  color:rgba(255,255,255,0.55);margin-top:8px;letter-spacing:2px;
+  text-transform:uppercase;
+  animation:popIn 0.7s 0.2s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+.splash-countdown{
+  margin-top:28px;
+  animation:popIn 0.7s 0.3s cubic-bezier(0.34,1.56,0.64,1) both;
+  display:flex;gap:12px;justify-content:center;
+}
+.sc-box{
+  background:rgba(255,255,255,0.1);border:1px solid rgba(255,255,255,0.15);
+  border-radius:12px;padding:10px 16px;text-align:center;min-width:64px;
+}
+.sc-num{font-family:var(--font);font-size:26px;font-weight:900;color:var(--white);line-height:1;}
+.sc-lbl{font-size:10px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.5px;margin-top:3px;}
+.splash-bar{
+  width:56px;height:3px;background:rgba(255,255,255,0.15);
+  border-radius:2px;margin:28px auto 0;overflow:hidden;
+  animation:popIn 0.7s 0.4s cubic-bezier(0.34,1.56,0.64,1) both;
+}
+.splash-bar-fill{height:100%;width:0;background:var(--barca-gold);border-radius:2px;animation:loadBar 1.5s 0.5s ease forwards;}
+@keyframes popIn{from{opacity:0;transform:translateY(16px) scale(0.95);}to{opacity:1;transform:none;}}
+@keyframes loadBar{to{width:100%;}}
+
+/* ── APP ── */
+#app{opacity:0;transition:opacity 0.5s ease;}
+#app.visible{opacity:1;}
+
+/* ── HEADER ── */
+.app-header{
+  position:sticky;top:0;z-index:100;
+  background:rgba(248,247,244,0.93);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-bottom:1px solid var(--border);padding:14px 18px 0;
+}
+.header-top{display:flex;align-items:center;justify-content:space-between;padding-bottom:12px;}
+.logo{font-family:var(--font);font-size:20px;font-weight:900;letter-spacing:-0.8px;color:var(--black);}
+.logo .dot-blue{color:var(--barca-blue);}
+.logo .dot-red{color:var(--barca-red);}
+.header-right{display:flex;flex-direction:column;align-items:flex-end;gap:2px;}
+.days-left{
+  font-family:var(--font);font-size:12px;font-weight:700;
+  background:var(--barca-blue);color:var(--white);
+  padding:3px 9px;border-radius:20px;
+}
+.header-sub{font-size:11px;color:var(--muted);}
+
+.nav-tabs{display:flex;overflow-x:auto;scrollbar-width:none;padding-bottom:1px;}
+.nav-tabs::-webkit-scrollbar{display:none;}
+.nav-tab{
+  flex:none;padding:11px 16px;font-family:var(--font);font-size:13px;font-weight:600;
+  color:var(--muted);background:none;border:none;cursor:pointer;
+  border-bottom:2px solid transparent;white-space:nowrap;
+  transition:color 0.2s,border-color 0.2s;
+}
+.nav-tab.active{color:var(--barca-blue);border-bottom-color:var(--barca-blue);}
+
+/* ── PANELS ── */
+.panel{display:none;padding:18px 16px 110px;animation:panelIn 0.35s cubic-bezier(0.16,1,0.3,1) both;}
+.panel.active{display:block;}
+@keyframes panelIn{from{opacity:0;transform:translateY(10px);}to{opacity:1;transform:none;}}
+
+/* ── HOME ── */
+.hero{
+  border-radius:20px;overflow:hidden;margin-bottom:14px;
+  position:relative;background:var(--barca-blue);
+}
+.hero-stripe{
+  position:absolute;inset:0;
+  background:repeating-linear-gradient(135deg,
+    transparent 0px,transparent 20px,
+    rgba(165,0,68,0.25) 20px,rgba(165,0,68,0.25) 40px
+  );pointer-events:none;
+}
+.hero-inner{position:relative;padding:22px 20px 20px;}
+.hero-tag{
+  display:inline-flex;align-items:center;gap:5px;
+  font-family:var(--font);font-size:10px;font-weight:700;
+  background:rgba(237,187,0,0.2);color:var(--barca-gold);
+  border:1px solid rgba(237,187,0,0.3);
+  padding:3px 10px;border-radius:20px;text-transform:uppercase;letter-spacing:1px;
+  margin-bottom:10px;
+}
+.hero-title{
+  font-family:var(--font);font-size:28px;font-weight:900;
+  color:var(--white);line-height:1.1;letter-spacing:-1px;margin-bottom:6px;
+}
+.hero-title em{color:var(--barca-gold);font-style:normal;}
+.hero-sub{font-size:13px;color:rgba(255,255,255,0.5);margin-bottom:18px;}
+
+.countdown-row{display:flex;gap:8px;}
+.cd-pill{
+  flex:1;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);
+  border-radius:12px;padding:10px 6px;text-align:center;
+}
+.cd-num{font-family:var(--font);font-size:22px;font-weight:900;color:var(--white);line-height:1;}
+.cd-lbl{font-size:9px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.4px;margin-top:3px;}
+
+.barca-quote{
+  background:var(--barca-blue);color:var(--white);
+  border-radius:14px;padding:16px 18px;margin-bottom:14px;
+  border-left:4px solid var(--barca-gold);
+  font-family:var(--font);font-size:14px;font-weight:600;
+  line-height:1.45;font-style:italic;
+}
+.barca-quote span{display:block;font-size:11px;font-weight:500;color:rgba(255,255,255,0.4);margin-top:6px;font-style:normal;text-transform:uppercase;letter-spacing:1px;}
+
+.week-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:14px;}
+.week-label{font-family:var(--font);font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px;}
+.days{display:flex;gap:5px;}
+.day-item{
+  flex:1;border-radius:10px;padding:7px 3px;text-align:center;
+  border:1.5px solid var(--border);background:var(--off);
+}
+.day-item.gym-day{background:var(--blue-light);border-color:#a8c4e8;}
+.day-item.rest-day{background:var(--off);}
+.day-item.today{border-color:var(--barca-blue)!important;box-shadow:0 0 0 1px var(--barca-blue);}
+.day-item .dname{font-size:9px;color:var(--muted);font-weight:600;text-transform:uppercase;letter-spacing:0.3px;}
+.day-item .dtype{font-family:var(--font);font-size:10px;font-weight:700;color:var(--dim);margin-top:2px;}
+.day-item.gym-day .dtype{color:var(--barca-blue);}
+
+.stat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-bottom:14px;}
+.stat-box{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:12px 8px;text-align:center;}
+.stat-box .sv{font-family:var(--font);font-size:18px;font-weight:900;color:var(--text);line-height:1;}
+.stat-box .sl{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:0.4px;margin-top:3px;}
+
+.quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.qcard{
+  background:var(--white);border:1px solid var(--border);border-radius:var(--r);
+  padding:16px;cursor:pointer;transition:transform 0.15s ease,box-shadow 0.15s ease;
+}
+.qcard:active{transform:scale(0.97);}
+.qcard .qi{font-size:22px;margin-bottom:8px;}
+.qcard .qt{font-family:var(--font);font-size:14px;font-weight:700;margin-bottom:2px;}
+.qcard .qs{font-size:12px;color:var(--muted);}
+
+/* ── GENERIC CARDS ── */
+.wcard{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:12px;}
+.wcard-title{font-family:var(--font);font-size:16px;font-weight:800;color:var(--text);margin-bottom:2px;letter-spacing:-0.3px;}
+.wcard-sub{font-size:12px;color:var(--muted);margin-bottom:14px;}
+.section-title{font-family:var(--font);font-size:22px;font-weight:900;color:var(--black);letter-spacing:-0.8px;margin-bottom:4px;}
+.section-sub{font-size:13px;color:var(--muted);margin-bottom:16px;line-height:1.5;}
+
+/* ── MACRO BAR ── */
+.macro-track{height:7px;background:var(--light);border-radius:4px;display:flex;overflow:hidden;margin:10px 0;}
+.macro-seg{height:100%;transition:width 0.7s cubic-bezier(0.34,1.56,0.64,1);}
+.macro-legend{display:flex;flex-wrap:wrap;gap:8px 16px;}
+.mdot-row{display:flex;align-items:center;gap:5px;font-size:12px;color:var(--muted);}
+.mdot{width:8px;height:8px;border-radius:50%;}
+
+/* ── MEAL LIST ── */
+.meal-item{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);}
+.meal-item:last-child{border-bottom:none;}
+.meal-time{font-family:var(--font);font-size:11px;font-weight:700;background:var(--off);border:1px solid var(--border);color:var(--muted);padding:3px 8px;border-radius:6px;white-space:nowrap;margin-top:1px;}
+.meal-info{flex:1;}
+.meal-name{font-size:14px;font-weight:600;margin-bottom:2px;}
+.meal-desc{font-size:12px;color:var(--muted);line-height:1.5;}
+.meal-kcal{font-family:var(--font);font-size:13px;font-weight:700;color:var(--muted);white-space:nowrap;margin-left:auto;padding-top:1px;}
+.meal-tag{display:inline-block;font-size:10px;font-weight:600;padding:1px 6px;border-radius:4px;margin-top:3px;}
+.meal-tag.prep{background:var(--gold-light);color:#8a6800;}
+.meal-tag.easy{background:var(--green-light);color:var(--green);}
+
+/* ── SESSIONS ── */
+.session{background:var(--white);border:1px solid var(--border);border-radius:var(--r);margin-bottom:10px;overflow:hidden;}
+.session-head{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;cursor:pointer;transition:background 0.15s;}
+.session-head:active{background:var(--off);}
+.session-left{display:flex;align-items:center;gap:10px;}
+.session-badge{font-family:var(--font);font-size:11px;font-weight:700;padding:3px 9px;border-radius:6px;white-space:nowrap;}
+.badge-push{background:var(--blue-light);color:var(--barca-blue);}
+.badge-pull{background:var(--red-light);color:var(--barca-red);}
+.badge-legs{background:var(--gold-light);color:#7a5c00;}
+.badge-full{background:var(--green-light);color:var(--green);}
+.session-name{font-family:var(--font);font-size:15px;font-weight:700;}
+.session-meta{font-size:12px;color:var(--muted);margin-top:1px;}
+.chevron{font-size:18px;color:var(--dim);transition:transform 0.3s cubic-bezier(0.34,1.56,0.64,1);}
+.session.open .chevron{transform:rotate(90deg);}
+.session-body{max-height:0;overflow:hidden;transition:max-height 0.45s cubic-bezier(0.16,1,0.3,1);}
+.session.open .session-body{max-height:1200px;}
+.session-inner{padding:4px 16px 16px;}
+
+.ex-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--border);}
+.ex-row:last-child{border-bottom:none;}
+.ex-n{font-family:var(--font);font-size:11px;font-weight:700;color:var(--dim);width:18px;flex-shrink:0;}
+.ex-name{flex:1;font-size:13px;font-weight:500;}
+.ex-sets{font-family:var(--font);font-size:12px;font-weight:600;background:var(--off);border:1px solid var(--border);color:var(--muted);padding:3px 9px;border-radius:6px;white-space:nowrap;}
+
+.logic-box{background:var(--off);border:1px solid var(--border);border-radius:10px;padding:14px;margin-bottom:12px;}
+.logic-box p{font-size:13px;line-height:1.65;color:var(--text);}
+.logic-box strong{color:var(--barca-blue);}
+
+.principle-item{display:flex;gap:14px;padding:13px 0;border-bottom:1px solid var(--border);align-items:flex-start;}
+.principle-item:last-child{border-bottom:none;}
+.pi-icon{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0;}
+.pi-blue{background:var(--blue-light);}
+.pi-red{background:var(--red-light);}
+.pi-gold{background:var(--gold-light);}
+.pi-green{background:var(--green-light);}
+.pi-title{font-family:var(--font);font-size:14px;font-weight:700;margin-bottom:2px;}
+.pi-desc{font-size:13px;color:var(--muted);line-height:1.55;}
+
+/* ── ANALYZER ── */
+.analyzer-wrap{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-bottom:12px;}
+.meal-inputs{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;}
+.mi-group label{display:block;font-family:var(--font);font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:5px;}
+textarea{width:100%;background:var(--off);border:1.5px solid var(--border);border-radius:var(--rs);color:var(--text);font-family:var(--body);font-size:13px;padding:10px 11px;resize:none;outline:none;transition:border-color 0.2s,box-shadow 0.2s;min-height:72px;line-height:1.5;}
+textarea:focus{border-color:var(--barca-blue);box-shadow:0 0 0 3px rgba(0,77,152,0.07);}
+.analyze-btn{
+  width:100%;padding:15px;background:var(--barca-blue);color:var(--white);
+  border:none;border-radius:12px;font-family:var(--font);font-size:15px;font-weight:700;
+  cursor:pointer;transition:opacity 0.15s,transform 0.15s;letter-spacing:0.2px;
+}
+.analyze-btn:hover{opacity:0.88;}
+.analyze-btn:active{transform:scale(0.98);}
+.analyze-btn:disabled{opacity:0.4;cursor:not-allowed;}
+
+.result-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:18px;margin-top:12px;display:none;animation:panelIn 0.4s cubic-bezier(0.16,1,0.3,1);}
+.result-card.visible{display:block;}
+.result-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;}
+.result-title{font-family:var(--font);font-size:18px;font-weight:800;letter-spacing:-0.5px;}
+.score-badge{font-family:var(--font);font-size:22px;font-weight:900;width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;}
+
+.rating-rows{margin-bottom:14px;}
+.rating-row{display:flex;align-items:center;padding:9px 0;border-bottom:1px solid var(--border);}
+.rating-row:last-child{border-bottom:none;}
+.rating-label{flex:1;font-size:13px;font-weight:500;}
+.rbadge{font-family:var(--font);font-size:11px;font-weight:700;padding:3px 10px;border-radius:20px;}
+.rb-good{background:var(--green-light);color:var(--green);}
+.rb-warn{background:var(--orange-light);color:var(--orange);}
+.rb-bad{background:var(--red-light);color:var(--barca-red);}
+
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0;}
+.chip{font-size:12px;font-weight:500;padding:5px 10px;border-radius:8px;display:inline-flex;align-items:center;gap:4px;}
+.chip-good{background:var(--green-light);color:var(--green);}
+.chip-fix{background:var(--orange-light);color:var(--orange);}
+.summary-box{background:var(--off);border-radius:10px;padding:12px 14px;font-size:13px;line-height:1.65;margin-top:10px;white-space:pre-wrap;}
+
+/* ── TIPS ── */
+.tip-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:16px;margin-bottom:10px;display:flex;gap:14px;}
+.tip-icon-box{font-size:22px;flex-shrink:0;}
+.tip-title{font-family:var(--font);font-size:14px;font-weight:700;margin-bottom:3px;}
+.tip-desc{font-size:13px;color:var(--muted);line-height:1.55;}
+
+.barca-countdown-section{
+  background:var(--barca-blue);border-radius:var(--r);padding:18px;margin-bottom:12px;
+}
+.bcs-title{font-family:var(--font);font-size:13px;font-weight:700;color:rgba(255,255,255,0.5);text-transform:uppercase;letter-spacing:1px;margin-bottom:12px;}
+.bcs-row{display:flex;gap:8px;}
+.bcs-box{flex:1;background:rgba(255,255,255,0.08);border:1px solid rgba(255,255,255,0.12);border-radius:10px;padding:10px 6px;text-align:center;}
+.bcs-num{font-family:var(--font);font-size:24px;font-weight:900;color:var(--white);line-height:1;}
+.bcs-lbl{font-size:9px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.4px;margin-top:3px;}
+.bcs-msg{font-size:13px;color:rgba(255,255,255,0.5);margin-top:12px;font-style:italic;}
+
+/* ── BOTTOM NAV ── */
+.bottom-nav{
+  position:fixed;bottom:0;left:0;right:0;
+  background:rgba(248,247,244,0.96);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);
+  border-top:1px solid var(--border);
+  display:flex;padding:8px 0 max(8px,env(safe-area-inset-bottom));z-index:200;
+}
+.bn-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;padding:6px 4px;cursor:pointer;border:none;background:none;transition:transform 0.18s cubic-bezier(0.34,1.56,0.64,1);}
+.bn-item:active{transform:scale(0.85);}
+.bn-icon{font-size:20px;line-height:1;transition:transform 0.25s cubic-bezier(0.34,1.56,0.64,1);}
+.bn-label{font-family:var(--font);font-size:10px;font-weight:600;color:var(--dim);transition:color 0.2s;}
+.bn-item.active .bn-label{color:var(--barca-blue);}
+.bn-item.active .bn-icon{transform:scale(1.1);}
+
+/* ── MISC ── */
+.spinner{display:inline-block;width:15px;height:15px;border:2.5px solid rgba(255,255,255,0.25);border-top-color:#fff;border-radius:50%;animation:spin 0.65s linear infinite;vertical-align:middle;}
+@keyframes spin{to{transform:rotate(360deg);}}
+.empty{text-align:center;padding:32px 20px;color:var(--muted);}
+.empty .ei{font-size:32px;margin-bottom:8px;}
+.empty p{font-size:13px;}
+.he{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:8px;cursor:pointer;display:flex;align-items:center;gap:12px;transition:box-shadow 0.2s;}
+.he:hover{box-shadow:0 2px 12px rgba(0,0,0,0.06);}
+.he-score{font-family:var(--font);font-size:18px;font-weight:900;width:40px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+.he-info{flex:1;}
+.he-title{font-size:13px;font-weight:600;margin-bottom:2px;}
+.he-meta{font-size:11px;color:var(--muted);}
+
+/* ── LOG PANEL ── */
+.phase-bar{display:flex;gap:0;border-radius:12px;overflow:hidden;margin-bottom:16px;height:44px;}
+.phase-seg{flex:1;display:flex;align-items:center;justify-content:center;font-family:var(--font);font-size:11px;font-weight:700;color:rgba(255,255,255,0.9);text-align:center;line-height:1.2;padding:0 4px;cursor:default;}
+.phase-seg.current{box-shadow:inset 0 0 0 2px rgba(255,255,255,0.5);}
+
+.log-session-select{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:16px;}
+.lss-btn{background:var(--white);border:1.5px solid var(--border);border-radius:12px;padding:12px 10px;text-align:center;cursor:pointer;transition:all 0.18s;font-family:var(--font);}
+.lss-btn:active{transform:scale(0.97);}
+.lss-btn.selected{border-color:var(--barca-blue);background:var(--blue-light);}
+.lss-btn .lss-day{font-size:10px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:3px;}
+.lss-btn .lss-name{font-size:13px;font-weight:700;color:var(--text);}
+.lss-btn.selected .lss-name{color:var(--barca-blue);}
+
+.log-exercise-card{background:var(--white);border:1px solid var(--border);border-radius:var(--r);margin-bottom:10px;overflow:hidden;}
+.log-ex-head{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;border-bottom:1px solid var(--border);background:var(--off);}
+.log-ex-name{font-family:var(--font);font-size:14px;font-weight:700;}
+.log-ex-target{font-size:11px;color:var(--muted);margin-top:1px;}
+.log-sets{padding:8px 14px 12px;}
+.log-set-row{display:grid;grid-template-columns:28px 1fr 1fr 36px;gap:6px;align-items:center;margin-bottom:6px;}
+.log-set-num{font-family:var(--font);font-size:12px;font-weight:700;color:var(--dim);text-align:center;}
+.log-input{background:var(--off);border:1.5px solid var(--border);border-radius:8px;padding:8px 10px;font-family:var(--font);font-size:14px;font-weight:600;color:var(--text);text-align:center;outline:none;width:100%;transition:border-color 0.2s;}
+.log-input:focus{border-color:var(--barca-blue);}
+.log-input::placeholder{color:var(--dim);font-weight:400;font-size:13px;}
+.log-check{width:32px;height:32px;border-radius:8px;border:1.5px solid var(--border);background:var(--white);cursor:pointer;display:flex;align-items:center;justify-content:center;font-size:16px;transition:all 0.18s;flex-shrink:0;}
+.log-check.done{background:var(--green-light);border-color:#a8d9bd;}
+.log-add-set{width:100%;padding:8px;background:none;border:1.5px dashed var(--border);border-radius:8px;font-family:var(--font);font-size:12px;font-weight:600;color:var(--muted);cursor:pointer;margin-top:2px;transition:all 0.15s;}
+.log-add-set:hover{border-color:var(--barca-blue);color:var(--barca-blue);}
+
+.save-log-btn{width:100%;padding:15px;background:var(--barca-blue);color:var(--white);border:none;border-radius:12px;font-family:var(--font);font-size:15px;font-weight:700;cursor:pointer;transition:opacity 0.15s,transform 0.15s;margin-top:4px;}
+.save-log-btn:active{transform:scale(0.98);}
+.save-log-btn:hover{opacity:0.88;}
+
+.log-history-entry{background:var(--white);border:1px solid var(--border);border-radius:var(--r);padding:14px 16px;margin-bottom:8px;cursor:pointer;}
+.lhe-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;}
+.lhe-title{font-family:var(--font);font-size:14px;font-weight:700;}
+.lhe-date{font-size:11px;color:var(--muted);}
+.lhe-stats{display:flex;gap:10px;}
+.lhe-stat{font-size:12px;color:var(--muted);}
+.lhe-stat strong{color:var(--text);}
+.lhe-pr{background:var(--gold-light);color:#7a5c00;font-family:var(--font);font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;}
+
+.pb-toast{position:fixed;bottom:90px;left:50%;transform:translateX(-50%) translateY(20px);background:var(--barca-blue);color:var(--white);font-family:var(--font);font-size:14px;font-weight:700;padding:12px 20px;border-radius:12px;opacity:0;transition:all 0.3s;pointer-events:none;z-index:500;white-space:nowrap;}
+.pb-toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+
+.col-hdr{display:grid;grid-template-columns:28px 1fr 1fr 36px;gap:6px;padding:0 14px 4px;font-size:10px;font-weight:700;color:var(--dim);text-transform:uppercase;letter-spacing:0.5px;}
+
+.protein-chip{background:var(--blue-light);color:var(--barca-blue);font-size:12px;font-weight:600;padding:5px 11px;border-radius:8px;cursor:pointer;transition:all 0.15s;user-select:none;}
+.protein-chip:active{background:var(--barca-blue);color:var(--white);}
+
+/* ── MEAL TIMELINE ── */
+.meal-timeline{position:relative;padding-left:56px;margin-bottom:4px;}
+.meal-timeline::before{content:'';position:absolute;left:20px;top:20px;bottom:20px;width:2px;background:var(--border);border-radius:1px;}
+
+.mtl-item{position:relative;margin-bottom:10px;}
+.mtl-time-dot{position:absolute;left:-44px;top:14px;width:32px;height:32px;border-radius:50%;background:var(--white);border:2px solid var(--border);display:flex;align-items:center;justify-content:center;z-index:1;transition:border-color 0.2s;}
+.mtl-item.has-data .mtl-time-dot{border-color:var(--barca-blue);background:var(--blue-light);}
+
+.mtl-card{background:var(--white);border:1px solid var(--border);border-radius:14px;overflow:hidden;transition:box-shadow 0.2s,border-color 0.2s;}
+.mtl-card:has(.mtl-edit-area:not([style*="none"])){border-color:var(--barca-blue);box-shadow:0 0 0 3px rgba(0,77,152,0.06);}
+
+.mtl-summary{display:flex;align-items:center;gap:10px;padding:12px 14px;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+.mtl-time-badge{font-family:var(--font);font-size:11px;font-weight:800;color:var(--barca-blue);background:var(--blue-light);padding:3px 8px;border-radius:6px;white-space:nowrap;flex-shrink:0;letter-spacing:0.3px;}
+.mtl-info{flex:1;min-width:0;}
+.mtl-name{font-family:var(--font);font-size:14px;font-weight:700;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.mtl-desc-preview{font-size:12px;color:var(--muted);margin-top:1px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.mtl-kcal-badge{font-family:var(--font);font-size:13px;font-weight:800;color:var(--text);flex-shrink:0;}
+.mtl-kcal-badge span{font-size:10px;font-weight:500;color:var(--muted);}
+.mtl-chevron{font-size:16px;color:var(--dim);transition:transform 0.25s cubic-bezier(0.34,1.56,0.64,1);flex-shrink:0;}
+.mtl-item.editing .mtl-chevron{transform:rotate(90deg);}
+
+/* Macro pills on summary */
+.mtl-macros{display:flex;gap:5px;margin-top:5px;flex-wrap:wrap;}
+.mtl-macro-pill{font-size:10px;font-weight:600;padding:2px 7px;border-radius:5px;}
+.mp-p{background:#e8eff9;color:#004D98;}
+.mp-k{background:#e8f5ee;color:#1a6b3a;}
+.mp-f{background:#fdf7e0;color:#7a5c00;}
+
+/* Edit area */
+.mtl-edit-area{border-top:1px solid var(--border);padding:14px;background:var(--off);}
+.edit-row-top{display:flex;gap:8px;margin-bottom:10px;align-items:center;}
+.edit-time-input{font-family:var(--font);font-size:13px;font-weight:700;background:var(--white);border:1.5px solid var(--border);border-radius:8px;padding:8px 10px;color:var(--barca-blue);outline:none;width:80px;text-align:center;transition:border-color 0.2s;-webkit-appearance:none;}
+.edit-time-input:focus{border-color:var(--barca-blue);}
+.edit-name-input{flex:1;font-family:var(--font);font-size:14px;font-weight:700;background:var(--white);border:1.5px solid var(--border);border-radius:8px;padding:8px 11px;color:var(--text);outline:none;transition:border-color 0.2s;}
+.edit-name-input:focus{border-color:var(--barca-blue);}
+.edit-name-input::placeholder{color:var(--dim);font-weight:400;}
+.edit-del-btn{width:36px;height:36px;border-radius:8px;background:var(--white);border:1.5px solid var(--border);color:var(--muted);cursor:pointer;font-size:15px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:all 0.15s;}
+.edit-del-btn:active{background:var(--red-light);border-color:var(--barca-red);color:var(--barca-red);}
+
+.edit-desc-input{width:100%;background:var(--white);border:1.5px solid var(--border);border-radius:8px;color:var(--text);font-family:var(--body);font-size:13px;padding:9px 11px;resize:none;outline:none;min-height:52px;line-height:1.5;margin-bottom:10px;transition:border-color 0.2s;}
+.edit-desc-input:focus{border-color:var(--barca-blue);}
+
+.edit-macro-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;}
+.emg-item{display:flex;flex-direction:column;gap:3px;}
+.emg-label{font-family:var(--font);font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:0.4px;text-align:center;}
+.emg-input{background:var(--white);border:1.5px solid var(--border);border-radius:8px;padding:8px 4px;font-family:var(--font);font-size:15px;font-weight:800;color:var(--text);text-align:center;outline:none;width:100%;transition:border-color 0.2s;-webkit-appearance:none;}
+.emg-input:focus{border-color:var(--barca-blue);}
+.emg-input::placeholder{color:var(--dim);font-size:12px;font-weight:400;}
+.emg-kcal{background:var(--off);border:1.5px solid var(--border);border-radius:8px;padding:8px 4px;font-family:var(--font);font-size:15px;font-weight:800;color:var(--muted);text-align:center;}
+
+.add-meal-btn{width:100%;padding:14px;background:none;border:2px dashed var(--border);border-radius:14px;font-family:var(--font);font-size:14px;font-weight:600;color:var(--muted);cursor:pointer;margin-bottom:16px;transition:all 0.2s;display:flex;align-items:center;justify-content:center;gap:6px;}
+.add-meal-btn:active{border-color:var(--barca-blue);color:var(--barca-blue);}
+
+.kost-tab{flex:1;padding:10px 8px;font-family:var(--font);font-size:13px;font-weight:700;color:var(--muted);background:none;border:none;border-radius:9px;cursor:pointer;transition:all 0.2s;}
+.kost-tab.active{background:var(--white);color:var(--barca-blue);box-shadow:0 1px 4px rgba(0,0,0,0.08);}
+.diff-pill{border-radius:8px;padding:6px 8px;text-align:center;font-family:var(--font);}
+.diff-pill .dp-val{font-size:14px;font-weight:900;line-height:1;}
+.diff-pill .dp-lbl{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:0.4px;margin-top:2px;opacity:0.75;}
+.ws-row{display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);}
+.ws-row:last-child{border-bottom:none;}
+.ws-icon{font-size:18px;flex-shrink:0;}
+.ws-label{flex:1;}
+.ws-label-title{font-size:13px;font-weight:600;}
+.ws-label-sub{font-size:11px;color:var(--muted);}
+.ws-value{font-family:var(--font);font-size:15px;font-weight:800;text-align:right;}
+.ws-sub{font-size:10px;color:var(--muted);text-align:right;}
+@media(min-width:480px){.panel{padding:22px 20px 110px;}}
+</style>
+</head>
+<body>
+
+<!-- SPLASH -->
+<div id="splash">
+  <div class="splash-stripes"></div>
+  <div class="splash-content">
+    <div class="splash-crest">🔵🔴</div>
+    <div class="splash-title">BCN<span>.</span></div>
+    <div class="splash-name">Yosef · Destination Barcelona</div>
+    <div class="splash-countdown" id="splashCountdown"></div>
+    <div class="splash-bar"><div class="splash-bar-fill"></div></div>
+  </div>
+</div>
+
+<!-- APP -->
+<div id="app">
+  <header class="app-header">
+    <div class="header-top">
+      <div class="logo">BCN<span class="dot-blue">.</span><span class="dot-red">fit</span></div>
+      <div class="header-right">
+        <div class="days-left" id="headerCountdown">⏳ Räknar...</div>
+        <div class="header-sub">Yosef · 82 kg → 6-pack</div>
+      </div>
+    </div>
+    <nav class="nav-tabs" id="navTabs">
+      <button class="nav-tab active" data-panel="home">Hem</button>
+      <button class="nav-tab" data-panel="traning">Träning</button>
+      <button class="nav-tab" data-panel="logg">Logg</button>
+      <button class="nav-tab" data-panel="kost">Kost</button>
+      <button class="nav-tab" data-panel="analyzer">Analysera</button>
+      <button class="nav-tab" data-panel="tips">Tips & Mål</button>
+    </nav>
+  </header>
+
+  <div class="panels">
+
+    <!-- ── HOME ── -->
+    <div class="panel active" id="panel-home">
+
+      <div class="hero">
+        <div class="hero-stripe"></div>
+        <div class="hero-inner">
+          <div class="hero-tag">⚽ Destination</div>
+          <div class="hero-title">Barcelona<br><em>väntar.</em></div>
+          <div class="hero-sub">Utbytessemester · Universitat de Barcelona · Höst 2026</div>
+          <div class="countdown-row" id="heroCountdown"></div>
+        </div>
+      </div>
+
+      <div class="barca-quote">
+        "Más que un club."<span>FC Barcelona — men det gäller dig också. Mer än ett mål.</span>
+      </div>
+
+      <div class="stat-row">
+        <div class="stat-box"><div class="sv" id="ws-pass">0/4</div><div class="sl">Pass vecka</div></div>
+        <div class="stat-box"><div class="sv" id="ws-kost">0/7</div><div class="sl">Kost loggad</div></div>
+        <div class="stat-box"><div class="sv">4×</div><div class="sl">Gympass</div></div>
+        <div class="stat-box"><div class="sv">7k</div><div class="sl">Steg mål</div></div>
+      </div>
+
+      <!-- WEEKLY SUMMARY -->
+      <div class="wcard" id="weeklySummaryCard" style="margin-bottom:14px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;">
+          <div class="wcard-title" style="margin-bottom:0;">Veckans sammanfattning</div>
+          <span style="font-family:var(--font);font-size:11px;font-weight:700;color:var(--muted);background:var(--off);border:1px solid var(--border);padding:2px 8px;border-radius:6px;" id="ws-week-label">V–</span>
+        </div>
+        <div id="weeklySummaryContent"></div>
+      </div>
+
+      <div class="week-card">
+        <div class="week-label">Veckans schema</div>
+        <div class="days" id="weekDays"></div>
+      </div>
+
+      <div class="quick-grid">
+        <div class="qcard" onclick="goTab('traning')"><div class="qi">🏋️</div><div class="qt">Träning</div><div class="qs">4 pass · Push/Pull/Legs</div></div>
+        <div class="qcard" onclick="goTab('kost')"><div class="qi">🥗</div><div class="qt">Din kostplan</div><div class="qs">Meal prep · 2 550 kcal</div></div>
+        <div class="qcard" onclick="goTab('analyzer')"><div class="qi">🔬</div><div class="qt">Analysera mat</div><div class="qs">AI-feedback direkt</div></div>
+        <div class="qcard" onclick="goTab('tips')"><div class="qi">🏆</div><div class="qt">Tips & Mål</div><div class="qs">Vad som avgör</div></div>
+      </div>
+
+      <div class="wcard">
+        <div class="wcard-title">Varför 2 550 kcal?</div>
+        <div class="wcard-sub">Inte 2 150 — här är PT-resonemanget</div>
+        <p style="font-size:13px;color:var(--muted);line-height:1.7;">
+          Med 82 kg och din aktivitetsnivå (4 gympass + dagliga promenader) är ditt underhållsbehov <strong style="color:var(--text);">~2 850–3 000 kcal/dag</strong>. Ett underskott på <strong style="color:var(--barca-blue);">300–400 kcal</strong> ger ~0,3–0,4 kg fettförlust per vecka. Det är rätt takt — snabbt nog att se resultat, lagom för att behålla muskelmassa. 2 150 kcal hade gett ett underskott på 800+ kcal vilket kostar styrka och återhämtning.
+        </p>
+      </div>
+    </div>
+
+    <!-- ── TRÄNING ── -->
+    <div class="panel" id="panel-traning">
+      <div class="section-title">Träningsplan</div>
+      <div class="section-sub">Upper/Lower-split · 4 pass/vecka · Byggd för rekomp på mellannivå</div>
+
+      <!-- VARFÖR UPPER/LOWER -->
+      <div class="wcard">
+        <div class="wcard-title">Varför Upper/Lower för dig?</div>
+        <div class="wcard-sub">Inte Push/Pull/Legs — här är skillnaden och varför det passar dig bättre</div>
+
+        <div class="principle-item">
+          <div class="pi-icon pi-blue">🔁</div>
+          <div>
+            <div class="pi-title">Dubbel träningsfrekvens per muskel</div>
+            <div class="pi-desc">Med Upper/Lower tränar du varje muskelgrupp <strong>2× per vecka</strong> med full återhämtning mellan passen. För dig på mellannivå är det vetenskapligt bevisat optimalt — mer frekvent stimulans utan att köra slut på CNS. Push/Pull/Legs ger ofta bara 1× frekvens på 3-dagarsveckor.</div>
+          </div>
+        </div>
+
+        <div class="principle-item">
+          <div class="pi-icon pi-red">⚡</div>
+          <div>
+            <div class="pi-title">Styrka + hypertrofi i samma vecka</div>
+            <div class="pi-desc">Upper A och Lower A kör tyngre med lägre reps (styrka, 4–6 reps). Upper B och Lower B kör mer volym med högre reps (hypertrofi, 8–12 reps). Den här variationen är nyckeln till rekomp — du håller styrkan uppe medan du bygger muskelmassa och tappar fett.</div>
+          </div>
+        </div>
+
+        <div class="principle-item">
+          <div class="pi-icon pi-gold">🏋️</div>
+          <div>
+            <div class="pi-title">Rätt övningar för mellannivå</div>
+            <div class="pi-desc">Du är förbi nybörjarstadiet — kroppen svarar inte längre på vad som helst. Nu krävs <strong>specifika rörelsemönster</strong>, rätt volym per muskelgrupp (10–20 sett/vecka), och variation i rep-intervall. Programmet är designat exakt för det.</div>
+          </div>
+        </div>
+
+        <div class="principle-item">
+          <div class="pi-icon pi-green">📐</div>
+          <div>
+            <div class="pi-title">Veckans struktur</div>
+            <div class="pi-desc"><strong>Måndag</strong> = Upper A (tung). <strong>Tisdag</strong> = Lower A (tung). <strong>Vila ons</strong>. <strong>Torsdag</strong> = Upper B (volym). <strong>Fredag</strong> = Lower B (volym). Lör/sön = vila + promenader. 48h vila mellan samma muskelgrupper.</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- UPPER A -->
+      <div style="font-family:var(--font);font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin:16px 0 8px;">Passen — tryck för att expandera</div>
+
+      <div class="session" id="s1">
+        <div class="session-head" onclick="toggleSession('s1')">
+          <div class="session-left">
+            <span class="session-badge badge-push">UPPER A · Måndag</span>
+            <div>
+              <div class="session-name">Överkropp — Styrka</div>
+              <div class="session-meta">Tung · 4–6 reps · 8 övningar · ~70 min</div>
+            </div>
+          </div>
+          <span class="chevron">›</span>
+        </div>
+        <div class="session-body">
+          <div class="session-inner">
+            <div class="logic-box"><p><strong>Fokus: maximal styrka och muskelstimulus.</strong> Du är utvilad, kör tunga compound-lyft med full koncentration. 2–3 min vila mellan sett på compound, 90 sek på isolation. Kör inte till failure — lämna 1–2 reps i tanken på compound-övningar.</p></div>
+
+            <div style="font-size:11px;font-weight:700;color:var(--barca-blue);text-transform:uppercase;letter-spacing:0.6px;padding:6px 0 4px;">Horizontal press</div>
+            <div class="ex-row">
+              <span class="ex-n">1</span>
+              <div style="flex:1;">
+                <div class="ex-name">Bänkpress — skivstång</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:1px;">Primär bröstövning. Skulderbladen ihoptryckta, fötterna i marken. Kontrollerat ner, explosivt upp.</div>
+              </div>
+              <span class="ex-sets">4 × 4–6</span>
+            </div>
+
+            <div style="font-size:11px;font-weight:700;color:var(--barca-blue);text-transform:uppercase;letter-spacing:0.6px;padding:10px 0 4px;">Vertical pull</div>
+            <div class="ex-row">
+              <span class="ex-n">2</span>
+              <div style="flex:1;">
+                <div class="ex-name">Viktad chins / Lat pulldown</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:1px;">Kör viktad chins om du klarar 3×6. Annars lat pulldown med progressiv belastning. Bredaste ryggövningen.</div>
+              </div>
+              <span class="ex-sets">4 × 4–6</span>
+            </div>
+
+            <div style="font-size:11px;font-weight:700;color:var(--barca-blue);text-transform:uppercase;letter-spacing:0.6px;padding:10px 0 4px;">Horizontal pull + axlar</div>
+            <div class="ex-row">
+              <span class="ex-n">3</span>
+              <div style="flex:1;">
+                <div class="ex-name">Pendlay row — skivstång</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:1px;">Kroppen parallell med golvet, dra stången till naveln. Bygger tjockleken i ryggen. Bättre än sittande rodd för styrka.</div>
+              </div>
+              <span class="ex-sets">4 × 5–7</span>
+            </div>
+            <div class="ex-row">
+              <span class="ex-n">4</span>
+              <div style="flex:1;">
+                <div class="ex-name">Overhead press — skivstång (stående)</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:1px;">Bästa axelövningen. Stående aktiverar core kraftigt. Pressa rakt upp, inte framåt.</div>
+              </div>
+              <span class="ex-sets">3 × 5–7</span>
+            </div>
+
+            <div style="font-size:11px;font-weight:700;color:var(--barca-blue);text-transform:uppercase;letter-spacing:0.6px;padding:10px 0 4px;">Skadeförebyggande + mage</div>
+            <div class="ex-row">
+              <span class="ex-n">5</span>
+              <div style="flex:1;">
+                <div class="ex-name">Face pulls — kabel</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:1px;">Kritisk för rotatormanschetten. Dra mot ansiktet med armbågarna högt. Förebygger axelskador från tung press.</div>
+              </div>
+              <span class="ex-sets">3 × 15–20</span>
+            </div>
+            <div class="ex-row">
+              <span class="ex-n">6</span>
+              <div style="flex:1;">
+                <div class="ex-name">Hängande knälyft</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:1px;">Lyft knäna till bröstet, kontrollerat ner. Fokusera på att rulla upp bäckenet — inte bara svinga benen.</div>
+              </div>
+              <span class="ex-sets">3 × 10–15</span>
+            </div>
+
+            <div style="font-size:11px;font-weight:700;color:var(--barca-blue);text-transform:uppercase;letter-spacing:0.6px;padding:10px 0 4px;">Grepp + handleder</div>
+            <div class="ex-row">
+              <span class="ex-n">7</span>
+              <div style="flex:1;">
+                <div class="ex-name">Farmer's carry — hantlar</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:1px;">Bär tunga hantlar längs sidan, gå 40 meter. Tränar grepp, underarmar, core och stabilitet simultant. Välj en vikt som gör att du verkligen kämpar sista 15 metrarna — för lätt ger ingenting.</div>
+              </div>
+              <span class="ex-sets">3 × 40 m</span>
+            </div>
+            <div class="ex-row">
+              <span class="ex-n">8</span>
+              <div style="flex:1;">
+                <div class="ex-name">Dead hang — stång</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:1px;">Häng i stången med rakt grepp max tid. Gör detta som avslutning eller mellan sett — kostar ingen tid. Bygger greppstyrka direkt och förbereder dig för viktad chins när du är redo.</div>
+              </div>
+              <span class="ex-sets">2 × max tid</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LOWER A -->
+      <div class="session" id="s2">
+        <div class="session-head" onclick="toggleSession('s2')">
+          <div class="session-left">
+            <span class="session-badge badge-legs">LOWER A · Tisdag</span>
+            <div>
+              <div class="session-name">Underkropp — Styrka</div>
+              <div class="session-meta">Tung · 4–6 reps · ~65 min</div>
+            </div>
+          </div>
+          <span class="chevron">›</span>
+        </div>
+        <div class="session-body">
+          <div class="session-inner">
+            <div class="logic-box"><p><strong>Bendag A prioriterar quad-dominanta rörelser och tung posterior chain.</strong> Knäböj + marklyft i samma pass är tungt — ta det seriöst. Ät ordentligt dagen innan. 2–3 min vila mellan sett. Axlar undviks här för att inte interferera med Upper A från igår.</p></div>
+
+            <div style="font-size:11px;font-weight:700;color:var(--barca-red);text-transform:uppercase;letter-spacing:0.6px;padding:6px 0 4px;">Quad dominant</div>
+            <div class="ex-row">
+              <span class="ex-n">1</span>
+              <div style="flex:1;">
+                <div class="ex-name">Knäböj — skivstång (back squat)</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:1px;">Kongen av alla övningar. Djup squat (lårerna parallella eller under). Håll bröstet uppe, knäna över tårna.</div>
+              </div>
+              <span class="ex-sets">4 × 4–6</span>
+            </div>
+            <div class="ex-row">
+              <span class="ex-n">2</span>
+              <div style="flex:1;">
+                <div class="ex-name">Leg press — bred fot, hög</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:1px;">Komplement till knäböj. Hög och bred fotstallning aktiverar glutes och hamstrings mer. Gå djupt.</div>
+              </div>
+              <span class="ex-sets">3 × 6–8</span>
+            </div>
+
+            <div style="font-size:11px;font-weight:700;color:var(--barca-red);text-transform:uppercase;letter-spacing:0.6px;padding:10px 0 4px;">Hip hinge / posterior chain</div>
+            <div class="ex-row">
+              <span class="ex-n">3</span>
+              <div style="flex:1;">
+                <div class="ex-name">Konventionell marklyft</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:1px;">Neutral rygg hela vägen. Stången nära kroppen, tryck golvet ifrån dig. En av de mest kalorибrännande övningarna som finns.</div>
+              </div>
+              <span class="ex-sets">3 × 4–5</span>
+            </div>
+            <div class="ex-row">
+              <span class="ex-n">4</span>
+              <div style="flex:1;">
+                <div class="ex-name">Leg curl — liggande maskin</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:1px;">Isolerar hamstrings direkt. Kontrollerat ner är lika viktigt som upp — excentrisk fas bygger mer.</div>
+              </div>
+              <span class="ex-sets">3 × 8–10</span>
+            </div>
+
+            <div style="font-size:11px;font-weight:700;color:var(--barca-red);text-transform:uppercase;letter-spacing:0.6px;padding:10px 0 4px;">Core — anti-rotation</div>
+            <div class="ex-row">
+              <span class="ex-n">5</span>
+              <div style="flex:1;">
+                <div class="ex-name">Ab wheel rollout</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:1px;">Den bästa mageövningen som finns — tränar hela kärnan under rörelse. Håll ryggen neutral, gå så långt du kan utan att tappa formen.</div>
+              </div>
+              <span class="ex-sets">3 × 8–10</span>
+            </div>
+            <div class="ex-row">
+              <span class="ex-n">6</span>
+              <div style="flex:1;">
+                <div class="ex-name">Stående kalvhävningar — maskin</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:1px;">Full ROM — hela vägen ner, paus i botten, explosivt upp. 2 sek paus i toppen.</div>
+              </div>
+              <span class="ex-sets">4 × 10–12</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- UPPER B -->
+      <div class="session" id="s3">
+        <div class="session-head" onclick="toggleSession('s3')">
+          <div class="session-left">
+            <span class="session-badge badge-pull">UPPER B · Torsdag</span>
+            <div>
+              <div class="session-name">Överkropp — Volym & definition</div>
+              <div class="session-meta">Måttlig vikt · 8–15 reps · 11 övningar · ~75 min</div>
+            </div>
+          </div>
+          <span class="chevron">›</span>
+        </div>
+        <div class="session-body">
+          <div class="session-inner">
+            <div class="logic-box"><p><strong>Fokus: hypertrofi, pump och metabol stress.</strong> Lättare vikt än måndag men mer volym och kortare vila (60–90 sek). Det är detta pass som formar muskeln och bränner fett — högt rep-antal och hög total volym. Ska svida.</p></div>
+
+            <div style="font-size:11px;font-weight:700;color:var(--barca-blue);text-transform:uppercase;letter-spacing:0.6px;padding:6px 0 4px;">Press — volym</div>
+            <div class="ex-row">
+              <span class="ex-n">1</span>
+              <div style="flex:1;">
+                <div class="ex-name">Lutande hantelpress</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:1px;">Övre bröst är det som syns mest ovanifrån. Lutning 30–45°. Full stretch i botten, krama ihop bröstkorgen i toppen.</div>
+              </div>
+              <span class="ex-sets">4 × 8–10</span>
+            </div>
+            <div class="ex-row">
+              <span class="ex-n">2</span>
+              <div style="flex:1;">
+                <div class="ex-name">Kabelflyes — låg-till-hög</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:1px;">Kabeln ger konstant spänning hela rörelsen till skillnad från hantlar. Lång stretch är nyckeln — gå så brett du kan.</div>
+              </div>
+              <span class="ex-sets">3 × 12–15</span>
+            </div>
+
+            <div style="font-size:11px;font-weight:700;color:var(--barca-blue);text-transform:uppercase;letter-spacing:0.6px;padding:10px 0 4px;">Pull — volym</div>
+            <div class="ex-row">
+              <span class="ex-n">3</span>
+              <div style="flex:1;">
+                <div class="ex-name">Sittande kabelrodd — nära grepp</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:1px;">Dra armbågarna bakåt längs kroppen, krama ihop skulderbladen i slutet. Kontrollerat ut. Bygger ryggbredden.</div>
+              </div>
+              <span class="ex-sets">4 × 10–12</span>
+            </div>
+            <div class="ex-row">
+              <span class="ex-n">4</span>
+              <div style="flex:1;">
+                <div class="ex-name">Lat pulldown — brett grepp</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:1px;">Luta dig lite bakåt, dra till övre bröstet. Full stretch i toppen — känn latsen sträckas ut.</div>
+              </div>
+              <span class="ex-sets">3 × 10–12</span>
+            </div>
+
+            <div style="font-size:11px;font-weight:700;color:var(--barca-blue);text-transform:uppercase;letter-spacing:0.6px;padding:10px 0 4px;">Axlar + armar</div>
+            <div class="ex-row">
+              <span class="ex-n">5</span>
+              <div style="flex:1;">
+                <div class="ex-name">Lateral raises — hantlar</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:1px;">Lite framåtlutad, pinkfingret högt. Lyft till axelhöjd. Bygger det breda V-formade utseendet — dramatisk visuell effekt.</div>
+              </div>
+              <span class="ex-sets">4 × 12–15</span>
+            </div>
+            <div class="ex-row">
+              <span class="ex-n">6</span>
+              <div style="flex:1;">
+                <div class="ex-name">EZ-bar bicep curl</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:1px;">EZ-bar är skonsam mot handlederna. Armbågarna fasta vid sidan. Full ROM — hela vägen ner.</div>
+              </div>
+              <span class="ex-sets">3 × 10–12</span>
+            </div>
+            <div class="ex-row">
+              <span class="ex-n">7</span>
+              <div style="flex:1;">
+                <div class="ex-name">Triceps pushdown — rep (V-bar)</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:1px;">Triceps = 2/3 av armens storlek. Armbågarna nära kroppen, pressa ner till fullt sträckt. Kläm i botten.</div>
+              </div>
+              <span class="ex-sets">3 × 12–15</span>
+            </div>
+
+            <div style="font-size:11px;font-weight:700;color:var(--barca-blue);text-transform:uppercase;letter-spacing:0.6px;padding:10px 0 4px;">Mage</div>
+            <div class="ex-row">
+              <span class="ex-n">8</span>
+              <div style="flex:1;">
+                <div class="ex-name">Cable crunch — knäböjd</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:1px;">Böj från midjan ner, inte dra med armar. Känn magen jobba — inte nacken. Lägg vikt på det, det är en övning inte en stretch.</div>
+              </div>
+              <span class="ex-sets">3 × 12–15</span>
+            </div>
+
+            <div style="font-size:11px;font-weight:700;color:var(--barca-blue);text-transform:uppercase;letter-spacing:0.6px;padding:10px 0 4px;">Handleder + underarmar</div>
+            <div class="ex-row">
+              <span class="ex-n">9</span>
+              <div style="flex:1;">
+                <div class="ex-name">Wrist curl — skivstång/hantlar</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:1px;">Underarmarna vilar mot bänkens kant, handflatorna upp. Krul handlederna upp, kontrollerat ner. Tränar flexorerna — den synliga undersidan av underarmen. Går inte att fuska med tung vikt här, fokusera på full ROM.</div>
+              </div>
+              <span class="ex-sets">3 × 15–20</span>
+            </div>
+            <div class="ex-row">
+              <span class="ex-n">10</span>
+              <div style="flex:1;">
+                <div class="ex-name">Reverse wrist curl — skivstång</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:1px;">Samma position men handflatorna ned. Tränar extensorerna på ovansidan av underarmen. Kör alltid detta direkt efter wrist curl — hoppar du över det skapar du obalans som ger handledsont på sikt.</div>
+              </div>
+              <span class="ex-sets">3 × 15–20</span>
+            </div>
+            <div class="ex-row">
+              <span class="ex-n">11</span>
+              <div style="flex:1;">
+                <div class="ex-name">Dead hang — stång</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:1px;">Häng i stången med rakt grepp så länge du kan. Bygger greppstyrka, underarmar och dekomprimerar ryggraden. Gör detta mellan sett på kabelövningar — det kostar ingen extra tid i gymmet.</div>
+              </div>
+              <span class="ex-sets">2 × max tid</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- LOWER B -->
+      <div class="session" id="s4">
+        <div class="session-head" onclick="toggleSession('s4')">
+          <div class="session-left">
+            <span class="session-badge badge-full">LOWER B · Fredag</span>
+            <div>
+              <div class="session-name">Underkropp — Volym & glutes</div>
+              <div class="session-meta">Måttlig vikt · 10–15 reps · ~65 min</div>
+            </div>
+          </div>
+          <span class="chevron">›</span>
+        </div>
+        <div class="session-body">
+          <div class="session-inner">
+            <div class="logic-box"><p><strong>Underkropp B fokuserar på glutes, hamstrings och högt rep-antal.</strong> Hip thrust är stjärnan — den är bäst på att aktivera gluteus maximus av alla övningar, vilket ger den breda atletiska nederkroppen. Avsluta veckan starkt.</p></div>
+
+            <div style="font-size:11px;font-weight:700;color:var(--barca-gold);text-transform:uppercase;letter-spacing:0.6px;padding:6px 0 4px;">Glute dominant</div>
+            <div class="ex-row">
+              <span class="ex-n">1</span>
+              <div style="flex:1;">
+                <div class="ex-name">Hip thrust — skivstång</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:1px;">Rygg mot bänk, skivstång över höfterna. Pressa upp tills kroppen är rak linje. Kläm glutes hårt i toppen, 1 sek paus. Den viktigaste glute-övningen som finns.</div>
+              </div>
+              <span class="ex-sets">4 × 8–10</span>
+            </div>
+            <div class="ex-row">
+              <span class="ex-n">2</span>
+              <div style="flex:1;">
+                <div class="ex-name">Bulgarian split squat — hantel</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:1px;">Bakre foten på bänk, sänk ner tills fram-låret är parallellt. Tuffast enbenövning som finns — bygger atletisk stabilitet och avslöjar styrkedifferenser.</div>
+              </div>
+              <span class="ex-sets">3 × 10–12 /ben</span>
+            </div>
+
+            <div style="font-size:11px;font-weight:700;color:var(--barca-gold);text-transform:uppercase;letter-spacing:0.6px;padding:10px 0 4px;">Hamstrings + quad</div>
+            <div class="ex-row">
+              <span class="ex-n">3</span>
+              <div style="flex:1;">
+                <div class="ex-name">Romanian deadlift — hantlar</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:1px;">Sänk hantlarna längs benen, känn hamstrings sträckas. Stopp vid mild stretch — inte hela vägen ner. Bygger bakre kedjan.</div>
+              </div>
+              <span class="ex-sets">3 × 10–12</span>
+            </div>
+            <div class="ex-row">
+              <span class="ex-n">4</span>
+              <div style="flex:1;">
+                <div class="ex-name">Leg extension — maskin</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:1px;">Isolerar quads direkt. Kör kontrollerat, 2 sek paus i toppen. Komplement till squat — träffar VMO (inner quad) som syns tydligt.</div>
+              </div>
+              <span class="ex-sets">3 × 12–15</span>
+            </div>
+            <div class="ex-row">
+              <span class="ex-n">5</span>
+              <div style="flex:1;">
+                <div class="ex-name">Leg curl — sittande maskin</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:1px;">Sittande ger bättre stretch än liggande. Kontrollerat hela rörelsen. Hälarna mot sätet om möjligt.</div>
+              </div>
+              <span class="ex-sets">3 × 12–15</span>
+            </div>
+
+            <div style="font-size:11px;font-weight:700;color:var(--barca-gold);text-transform:uppercase;letter-spacing:0.6px;padding:10px 0 4px;">Core — avslutning</div>
+            <div class="ex-row">
+              <span class="ex-n">6</span>
+              <div style="flex:1;">
+                <div class="ex-name">Hängande benlyft — rak</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:1px;">Håll raka ben, lyft till 90°. Svårt — om du inte klarar det, böj knäna. Fokusera på att rulla upp bäckenet i toppen.</div>
+              </div>
+              <span class="ex-sets">3 × 10–15</span>
+            </div>
+            <div class="ex-row">
+              <span class="ex-n">7</span>
+              <div style="flex:1;">
+                <div class="ex-name">Seated calf raise — maskin</div>
+                <div style="font-size:11px;color:var(--muted);margin-top:1px;">Tränar soleus (djupare kalvmuskeln) till skillnad från stående. Full ROM, paus i botten.</div>
+              </div>
+              <span class="ex-sets">4 × 12–15</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- PROGRESSIONSGUIDE -->
+      <div class="wcard" style="margin-top:8px;">
+        <div class="wcard-title">Progressionsregel — gör detta varje vecka</div>
+        <div class="wcard-sub">Det enda sättet att faktiskt fortsätta växa</div>
+        <div style="display:flex;flex-direction:column;gap:8px;">
+          <div style="background:var(--blue-light);border-radius:10px;padding:12px 14px;">
+            <div style="font-family:var(--font);font-size:13px;font-weight:700;color:var(--barca-blue);margin-bottom:4px;">Dubbel progression</div>
+            <div style="font-size:13px;color:var(--text);line-height:1.6;">Om du klarar <em>övre</em> rep-gränsen på alla sett → öka vikten nästa pass. Om du inte når <em>nedre</em> gränsen → behåll vikten tills du gör det. Exempel: 3×6–8. Du klarar 8, 8, 7 → nästa vecka öka vikten. Du klarar 6, 6, 5 → samma vikt.</div>
+          </div>
+          <div style="background:var(--off);border-radius:10px;padding:12px 14px;border:1px solid var(--border);">
+            <div style="font-family:var(--font);font-size:13px;font-weight:700;color:var(--text);margin-bottom:4px;">Praktiskt tips</div>
+            <div style="font-size:13px;color:var(--muted);line-height:1.6;">Skriv ner alla dina lyft i telefonen efter varje pass. Utan logg har du ingen progression. Det tar 30 sekunder och är det enskilt viktigaste du kan göra.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── LOGG ── -->
+    <div class="panel" id="panel-logg">
+      <div class="section-title">Träningslogg</div>
+      <div class="section-sub">Logga dina lyft — appen håller koll på dina rekord.</div>
+
+      <!-- PHASE INDICATOR -->
+      <div class="wcard" style="padding:14px 16px;">
+        <div style="font-family:var(--font);font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px;">Din fas just nu</div>
+        <div class="phase-bar" id="phaseBar"></div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.6;" id="phaseDesc"></div>
+      </div>
+
+      <!-- SESSION SELECTOR -->
+      <div style="font-family:var(--font);font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;">Välj pass att logga</div>
+      <div class="log-session-select">
+        <div class="lss-btn" onclick="selectSession('ua')" id="lss-ua"><div class="lss-day">Måndag</div><div class="lss-name">Upper A</div><div style="font-size:11px;color:var(--muted);margin-top:2px;">Styrka</div></div>
+        <div class="lss-btn" onclick="selectSession('la')" id="lss-la"><div class="lss-day">Tisdag</div><div class="lss-name">Lower A</div><div style="font-size:11px;color:var(--muted);margin-top:2px;">Styrka</div></div>
+        <div class="lss-btn" onclick="selectSession('ub')" id="lss-ub"><div class="lss-day">Torsdag</div><div class="lss-name">Upper B</div><div style="font-size:11px;color:var(--muted);margin-top:2px;">Volym</div></div>
+        <div class="lss-btn" onclick="selectSession('lb')" id="lss-lb"><div class="lss-day">Fredag</div><div class="lss-name">Lower B</div><div style="font-size:11px;color:var(--muted);margin-top:2px;">Volym</div></div>
+      </div>
+
+      <!-- LOG FORM -->
+      <div id="logForm" style="display:none;">
+        <div style="font-family:var(--font);font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:8px;" id="logFormTitle">Loggar: —</div>
+        <div id="logExercises"></div>
+        <div style="margin-top:4px;">
+          <div style="font-size:12px;color:var(--muted);margin-bottom:6px;">Anteckningar (valfritt)</div>
+          <textarea id="logNotes" placeholder="Hur kändes passet? Något att tänka på?" style="min-height:56px;"></textarea>
+        </div>
+        <button class="save-log-btn" onclick="saveLog()">💾 Spara pass</button>
+      </div>
+
+      <!-- HISTORY -->
+      <div style="margin-top:20px;">
+        <div style="font-family:var(--font);font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px;">Tidigare pass</div>
+        <div id="logHistoryList"><div class="empty"><div class="ei">📋</div><p>Inga loggade pass ännu.<br>Välj ett pass ovan för att börja.</p></div></div>
+      </div>
+    </div>
+
+    <!-- ── KOST ── -->
+    <div class="panel" id="panel-kost">
+      <div class="section-title">Din kostplan</div>
+      <div class="section-sub">Jämför din plan med vad du faktiskt åt idag.</div>
+
+      <!-- KOST TABS -->
+      <div style="display:flex;background:var(--light);border-radius:12px;padding:3px;margin-bottom:16px;gap:3px;">
+        <button class="kost-tab active" id="kt-plan" onclick="switchKostTab('plan')">📋 Min plan</button>
+        <button class="kost-tab" id="kt-idag" onclick="switchKostTab('idag')">🍽️ Idag</button>
+      </div>
+
+      <!-- MACRO SUMMARY — shows for both tabs -->
+      <div class="wcard" id="macroSummaryCard" style="margin-bottom:16px;">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;">
+          <div>
+            <div class="wcard-title" id="macroCardTitle">Planens makron</div>
+            <div style="font-size:12px;color:var(--muted);margin-top:1px;">Mål: 2 550 kcal · 180P · 255K · 90F</div>
+          </div>
+          <div style="text-align:right;">
+            <div style="font-family:var(--font);font-size:32px;font-weight:900;line-height:1;letter-spacing:-1px;" id="totalKcalDisplay">0</div>
+            <div style="font-size:11px;color:var(--muted);">kcal</div>
+          </div>
+        </div>
+        <div style="height:10px;background:var(--light);border-radius:5px;overflow:hidden;margin-bottom:14px;">
+          <div id="kcalBar" style="height:100%;border-radius:5px;background:var(--barca-blue);width:0%;transition:width 0.6s cubic-bezier(0.34,1.56,0.64,1);"></div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:12px;">
+          <div style="background:var(--blue-light);border-radius:10px;padding:10px 8px;text-align:center;">
+            <div style="font-family:var(--font);font-size:18px;font-weight:900;color:#004D98;line-height:1;" id="proteinVal">0<span style="font-size:11px;">g</span></div>
+            <div style="font-size:10px;font-weight:700;color:#004D98;opacity:0.7;text-transform:uppercase;letter-spacing:0.4px;margin-top:2px;">Protein</div>
+            <div style="height:3px;background:rgba(0,77,152,0.15);border-radius:2px;margin-top:5px;overflow:hidden;"><div id="proteinBar" style="height:100%;background:#004D98;width:0%;transition:width 0.5s ease;border-radius:2px;"></div></div>
+          </div>
+          <div style="background:#e8f5ee;border-radius:10px;padding:10px 8px;text-align:center;">
+            <div style="font-family:var(--font);font-size:18px;font-weight:900;color:#1a6b3a;line-height:1;" id="kolhVal">0<span style="font-size:11px;">g</span></div>
+            <div style="font-size:10px;font-weight:700;color:#1a6b3a;opacity:0.7;text-transform:uppercase;letter-spacing:0.4px;margin-top:2px;">Kolh</div>
+            <div style="height:3px;background:rgba(26,107,58,0.15);border-radius:2px;margin-top:5px;overflow:hidden;"><div id="kolhBar" style="height:100%;background:#3db870;width:0%;transition:width 0.5s ease;border-radius:2px;"></div></div>
+          </div>
+          <div style="background:#fdf7e0;border-radius:10px;padding:10px 8px;text-align:center;">
+            <div style="font-family:var(--font);font-size:18px;font-weight:900;color:#7a5c00;line-height:1;" id="fettVal">0<span style="font-size:11px;">g</span></div>
+            <div style="font-size:10px;font-weight:700;color:#7a5c00;opacity:0.7;text-transform:uppercase;letter-spacing:0.4px;margin-top:2px;">Fett</div>
+            <div style="height:3px;background:rgba(122,92,0,0.15);border-radius:2px;margin-top:5px;overflow:hidden;"><div id="fettBar" style="height:100%;background:#EDBB00;width:0%;transition:width 0.5s ease;border-radius:2px;"></div></div>
+          </div>
+        </div>
+        <!-- DIFF ROW — only visible in idag tab -->
+        <div id="diffRow" style="display:none;margin-bottom:10px;">
+          <div style="font-family:var(--font);font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:6px;">Diff mot plan</div>
+          <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px;" id="diffGrid"></div>
+        </div>
+        <div id="macroStatusMsg" style="font-size:12px;padding:8px 12px;border-radius:8px;text-align:center;font-weight:500;"></div>
+      </div>
+
+      <!-- PLAN TAB CONTENT -->
+      <div id="kostTabPlan">
+        <div class="meal-timeline" id="mealPlanContainer"></div>
+        <button class="add-meal-btn" onclick="addMeal('plan')">
+          <span style="font-size:18px;">＋</span> Lägg till måltid i planen
+        </button>
+      </div>
+
+      <!-- IDAG TAB CONTENT -->
+      <div id="kostTabIdag" style="display:none;">
+        <div style="background:var(--blue-light);border:1px solid #a8c4e8;border-radius:12px;padding:12px 14px;margin-bottom:14px;font-size:13px;color:var(--barca-blue);line-height:1.5;">
+          Logga exakt vad du åt idag. Makrorna jämförs automatiskt mot din plan.
+        </div>
+        <div class="meal-timeline" id="todayMealContainer"></div>
+        <button class="add-meal-btn" onclick="addMeal('idag')">
+          <span style="font-size:18px;">＋</span> Lägg till måltid för idag
+        </button>
+        <button onclick="clearToday()" style="width:100%;padding:10px;background:none;border:1px solid var(--border);border-radius:10px;font-family:var(--font);font-size:13px;font-weight:600;color:var(--muted);cursor:pointer;margin-bottom:16px;">
+          🗑 Rensa dagens logg
+        </button>
+      </div>
+
+      <!-- PROTEIN SOURCES — always visible -->
+      <div class="wcard">
+        <div class="wcard-title">Proteinkällor</div>
+        <div class="wcard-sub">Tryck för att lägga till i senaste måltiden</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;">
+          <span class="protein-chip" onclick="copyToMeal(this)">🍗 Kycklingbröst 200g</span>
+          <span class="protein-chip" onclick="copyToMeal(this)">🦃 Kalkonsnitzel 200g</span>
+          <span class="protein-chip" onclick="copyToMeal(this)">🥚 3 ägg + 3 äggvitor</span>
+          <span class="protein-chip" onclick="copyToMeal(this)">🧀 Kvarg 250g</span>
+          <span class="protein-chip" onclick="copyToMeal(this)">🥛 Vassle 1 scoop</span>
+          <span class="protein-chip" onclick="copyToMeal(this)">🫘 Linser 150g kokt</span>
+          <span class="protein-chip" onclick="copyToMeal(this)">🥩 Nötfärs 150g</span>
+          <span class="protein-chip" onclick="copyToMeal(this)">🍱 Tofu 200g</span>
+        </div>
+      </div>
+      <div class="wcard">
+        <div class="wcard-title">Meal prep-strategi</div>
+        <div class="wcard-sub">Prep en gång, ät rätt hela veckan</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.7;">Koka <strong style="color:var(--text);">1 kg ris + 1,5 kg kycklingbröst</strong> på söndagen. Portionera i 5 matlådor. Overnight oats kvällen innan. Smoothie-påsar i frysen.</div>
+      </div>
+    </div>
+
+    <!-- ── ANALYZER ── -->
+    <div class="panel" id="panel-analyzer">
+      <div class="section-title">Måltidsanalys</div>
+      <div class="section-sub">Skriv vad du faktiskt äter — AI:n ger direkt feedback mot dina mål.</div>
+
+      <div class="analyzer-wrap">
+        <div class="meal-inputs">
+          <div class="mi-group">
+            <label>🌅 Frukost</label>
+            <textarea id="m-frukost" placeholder="T.ex. overnight oats med bär och kvarg..."></textarea>
+          </div>
+          <div class="mi-group">
+            <label>🥤 Mellanmål</label>
+            <textarea id="m-mellan" placeholder="T.ex. proteinsmoothie med banan..."></textarea>
+          </div>
+          <div class="mi-group">
+            <label>🍱 Lunch</label>
+            <textarea id="m-lunch" placeholder="T.ex. kyckling, ris och grönsaker..."></textarea>
+          </div>
+          <div class="mi-group">
+            <label>🌙 Kvällsmat</label>
+            <textarea id="m-kvall" placeholder="T.ex. kalkon, sötpotatis, broccoli..."></textarea>
+          </div>
+        </div>
+        <button class="analyze-btn" id="analyzeBtn" onclick="analyzeMeals()">
+          Analysera mina måltider
+        </button>
+      </div>
+
+      <div class="result-card" id="resultCard">
+        <div class="result-header">
+          <div class="result-title" id="result-title">Analys</div>
+          <div class="score-badge" id="score-badge"></div>
+        </div>
+        <div id="result-content"></div>
+      </div>
+
+      <div style="margin-top:16px;">
+        <div style="font-family:var(--font);font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:10px;">Tidigare analyser</div>
+        <div id="history-list"><div class="empty"><div class="ei">📋</div><p>Inga analyser ännu.</p></div></div>
+      </div>
+    </div>
+
+    <!-- ── TIPS & MÅL ── -->
+    <div class="panel" id="panel-tips">
+      <div class="section-title">Tips & Mål</div>
+      <div class="section-sub">Det du behöver veta för att faktiskt nå dit.</div>
+
+      <!-- PERIODIZATION -->
+      <div class="wcard" style="margin-bottom:12px;border-left:4px solid var(--barca-blue);">
+        <div class="wcard-title">Kör inte samma program rakt igenom</div>
+        <div class="wcard-sub">Periodisering — din 12-veckors plan mot Barcelona</div>
+        <div style="display:flex;flex-direction:column;gap:0;">
+
+          <div style="display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);">
+            <div style="width:4px;border-radius:2px;background:var(--barca-blue);flex-shrink:0;min-height:56px;margin-top:3px;"></div>
+            <div>
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px;">
+                <div style="font-family:var(--font);font-size:13px;font-weight:800;">Fas 1 — Grund</div>
+                <span style="font-family:var(--font);font-size:10px;font-weight:700;background:var(--blue-light);color:var(--barca-blue);padding:2px 8px;border-radius:6px;">Vecka 1–4</span>
+              </div>
+              <div style="font-size:12px;color:var(--muted);line-height:1.6;">Lär dig rörelserna med rätt teknik. Hitta dina startvikter. Bygg vanan — 4 pass/vecka utan undantag. Kroppen anpassar sig neuralt (nervbanor) mer än muskulärt de första veckorna — förvänta dig att vikterna ökar snabbt till en början.</div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);">
+            <div style="width:4px;border-radius:2px;background:var(--green-mid);flex-shrink:0;min-height:56px;margin-top:3px;"></div>
+            <div>
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px;">
+                <div style="font-family:var(--font);font-size:13px;font-weight:800;">Fas 2 — Uppbyggnad</div>
+                <span style="font-family:var(--font);font-size:10px;font-weight:700;background:var(--green-light);color:var(--green);padding:2px 8px;border-radius:6px;">Vecka 5–8</span>
+              </div>
+              <div style="font-size:12px;color:var(--muted);line-height:1.6;">Öka volymen. Lägg ett extra sett på varje compound-övning. Lägg till 1 ny isolationsövning per pass. Kaloriintaget kan höjas till ~2 650 kcal om du märker att återhämtningen haltar — muskler byggs nu.</div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:12px;padding:12px 0;border-bottom:1px solid var(--border);">
+            <div style="width:4px;border-radius:2px;background:var(--barca-red);flex-shrink:0;min-height:56px;margin-top:3px;"></div>
+            <div>
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px;">
+                <div style="font-family:var(--font);font-size:13px;font-weight:800;">Fas 3 — Peak</div>
+                <span style="font-family:var(--font);font-size:10px;font-weight:700;background:var(--red-light);color:var(--barca-red);padding:2px 8px;border-radius:6px;">Vecka 9–11</span>
+              </div>
+              <div style="font-size:12px;color:var(--muted);line-height:1.6;">Tyngre vikter, lägre reps (3–5 på compound). Intensiteten upp, volymen ner lite. Sänk kalorierna till ~2 400 kcal för ökad fettförbränning sista sprinten. Kroppen är nu tränad nog att hantera det.</div>
+            </div>
+          </div>
+
+          <div style="display:flex;gap:12px;padding:12px 0;">
+            <div style="width:4px;border-radius:2px;background:var(--barca-gold);flex-shrink:0;min-height:56px;margin-top:3px;"></div>
+            <div>
+              <div style="display:flex;align-items:center;gap:8px;margin-bottom:3px;">
+                <div style="font-family:var(--font);font-size:13px;font-weight:800;">Fas 4 — Deload</div>
+                <span style="font-family:var(--font);font-size:10px;font-weight:700;background:var(--gold-light);color:#7a5c00;padding:2px 8px;border-radius:6px;">Vecka 12</span>
+              </div>
+              <div style="font-size:12px;color:var(--muted);line-height:1.6;">Halvera volymen, behåll vikten. Du ser <em>bättre</em> ut efter deload än under — kroppen supercompenserar och musklerna fylls på med glykogen. Det är under de sista dagarna innan Barcelona du är som bäst.</div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+      <div class="barca-countdown-section">
+        <div class="bcs-title">⏳ Countdown till Barcelona</div>
+        <div class="bcs-row" id="tipsCountdown"></div>
+        <div class="bcs-msg" id="tipsMsg"></div>
+      </div>
+
+      <div class="wcard">
+        <div class="wcard-title">Tidsplan mot målet</div>
+        <div class="wcard-sub">Vad som händer månad för månad</div>
+        <div id="timeline-wrap"></div>
+      </div>
+
+      <div class="tip-card"><div class="tip-icon-box">🥩</div><div><div class="tip-title">Protein vid varje måltid</div><div class="tip-desc">35–45g per måltid. Jämn fördelning är viktigare än totalsumman — kroppen kan inte lagra mer än ~40g protein per intag för muskelsyntes.</div></div></div>
+      <div class="tip-card"><div class="tip-icon-box">⚖️</div><div><div class="tip-title">Väg dig varje morgon</div><div class="tip-desc">Direkt efter toaletten, innan frukost. Titta alltid på 7-dagarsmedelvärdet — inte enskilda dagar. Vikten kan svänga ±1,5 kg på en dag beroende på salt, vatten och mat i tarmen.</div></div></div>
+      <div class="tip-card"><div class="tip-icon-box">😴</div><div><div class="tip-title">Sömn är gratis dopning</div><div class="tip-desc">7–9 timmar. Under sömn frisätts tillväxthormon och testosteron. Dålig sömn höjer kortisol, ökar sötsug och halverar fettförbränningseffekten av träningen.</div></div></div>
+      <div class="tip-card"><div class="tip-icon-box">💧</div><div><div class="tip-title">3+ liter vatten/dag</div><div class="tip-desc">Vatten håller dig mätt, förbättrar återhämtning och optimerar ämnesomsättningen. Drick ett stort glas direkt på morgonen — det sätter igång metabolismen.</div></div></div>
+      <div class="tip-card"><div class="tip-icon-box">🚫</div><div><div class="tip-title">Alkohol bromsar hårt</div><div class="tip-desc">Stoppar fettförbränningen direkt i 24–48h, sänker testosteron med upp till 23% och saboterar återhämtningen. Under sträckan mot Barcelona: minimera kraftigt.</div></div></div>
+      <div class="tip-card"><div class="tip-icon-box">📸</div><div><div class="tip-title">Ta progress-bilder varannan vecka</div><div class="tip-desc">Spegeln ljuger — foton samma tid, samma belysning, morgon. Du ser inte förändringen dag för dag men varannan vecka är det uppenbart. Det håller motivationen uppe.</div></div></div>
+
+      <div class="wcard" style="margin-top:4px;">
+        <div class="wcard-title">Smarta tillskott</div>
+        <div class="wcard-sub">Prioritetsordning för dig</div>
+        <div style="display:flex;flex-direction:column;gap:8px;margin-top:4px;">
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);">
+            <span style="font-size:18px;">💊</span>
+            <div style="flex:1;"><div style="font-size:13px;font-weight:600;">Kreatin monohydrat — 5g/dag</div><div style="font-size:12px;color:var(--muted);">Det enda tillskottet med stark vetenskaplig konsensus. +5–10% styrka. Ta varje dag, även vilodagar.</div></div>
+            <span style="font-family:var(--font);font-size:11px;font-weight:700;background:var(--green-light);color:var(--green);padding:2px 8px;border-radius:6px;">Prio 1</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);">
+            <span style="font-size:18px;">🥛</span>
+            <div style="flex:1;"><div style="font-size:13px;font-weight:600;">Vassleprotein</div><div style="font-size:12px;color:var(--muted);">Enkelt sätt att nå 180g protein utan att äta enorma mängder mat. 1–2 scoops/dag.</div></div>
+            <span style="font-family:var(--font);font-size:11px;font-weight:700;background:var(--green-light);color:var(--green);padding:2px 8px;border-radius:6px;">Prio 2</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border);">
+            <span style="font-size:18px;">☀️</span>
+            <div style="flex:1;"><div style="font-size:13px;font-weight:600;">D-vitamin — 2000–4000 IE/dag</div><div style="font-size:12px;color:var(--muted);">Majoriteten av befolkningen i Sverige är D-vitaminbrist, påverkar testosteron och energi.</div></div>
+            <span style="font-family:var(--font);font-size:11px;font-weight:700;background:var(--blue-light);color:var(--barca-blue);padding:2px 8px;border-radius:6px;">Prio 3</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:10px;padding:8px 0;">
+            <span style="font-size:18px;">🌙</span>
+            <div style="flex:1;"><div style="font-size:13px;font-weight:600;">Magnesium — 300–400 mg/kväll</div><div style="font-size:12px;color:var(--muted);">Förbättrar sömnkvalitet och minskar muskelkramper. Ta på kvällen.</div></div>
+            <span style="font-family:var(--font);font-size:11px;font-weight:700;background:var(--blue-light);color:var(--barca-blue);padding:2px 8px;border-radius:6px;">Prio 4</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <nav class="bottom-nav">
+    <button class="bn-item active" data-panel="home"><span class="bn-icon">🏠</span><span class="bn-label">Hem</span></button>
+    <button class="bn-item" data-panel="traning"><span class="bn-icon">🏋️</span><span class="bn-label">Träning</span></button>
+    <button class="bn-item" data-panel="logg"><span class="bn-icon">📊</span><span class="bn-label">Logg</span></button>
+    <button class="bn-item" data-panel="kost"><span class="bn-icon">🍱</span><span class="bn-label">Kost</span></button>
+    <button class="bn-item" data-panel="analyzer"><span class="bn-icon">🔬</span><span class="bn-label">Analysera</span></button>
+    <button class="bn-item" data-panel="tips"><span class="bn-icon">🏆</span><span class="bn-label">Tips</span></button>
+  </nav>
+  <div class="pb-toast" id="pbToast"></div>
+</div>
+
+<script>
+// ── COUNTDOWN ──
+function getCountdown() {
+  const target = new Date('2026-09-01T00:00:00');
+  const now = new Date();
+  const diff = target - now;
+  if (diff <= 0) return {d:0,h:0,m:0,w:0};
+  const d = Math.floor(diff / 86400000);
+  const h = Math.floor((diff % 86400000) / 3600000);
+  const m = Math.floor((diff % 3600000) / 60000);
+  const w = Math.floor(d / 7);
+  return {d,h,m,w};
+}
+
+function renderCountdownBoxes(containerId, {d,h,m,w}) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  el.innerHTML = `
+    <div class="cd-pill"><div class="cd-num">${d}</div><div class="cd-lbl">Dagar</div></div>
+    <div class="cd-pill"><div class="cd-num">${w}</div><div class="cd-lbl">Veckor</div></div>
+    <div class="cd-pill"><div class="cd-num">${h}</div><div class="cd-lbl">Timmar</div></div>
+    <div class="cd-pill"><div class="cd-num">${m}</div><div class="cd-lbl">Min</div></div>`;
+}
+
+function renderBcsCountdown(containerId, {d,h,m,w}) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  el.innerHTML = `
+    <div class="bcs-box"><div class="bcs-num">${d}</div><div class="bcs-lbl">Dagar</div></div>
+    <div class="bcs-box"><div class="bcs-num">${w}</div><div class="bcs-lbl">Veckor</div></div>
+    <div class="bcs-box"><div class="bcs-num">${h}</div><div class="bcs-lbl">Timmar</div></div>
+    <div class="bcs-box"><div class="bcs-num">${m}</div><div class="bcs-lbl">Min</div></div>`;
+}
+
+function renderSplashCountdown({d,w}) {
+  const el = document.getElementById('splashCountdown');
+  if (!el) return;
+  el.innerHTML = `
+    <div class="sc-box"><div class="sc-num">${d}</div><div class="sc-lbl">Dagar</div></div>
+    <div class="sc-box"><div class="sc-num">${w}</div><div class="sc-lbl">Veckor</div></div>`;
+}
+
+function updateAllCountdowns() {
+  const c = getCountdown();
+  const msg = c.d > 90 ? "Du har gott om tid — men det är nu det börjar. 💪" :
+              c.d > 60 ? "Snart under 2 månader. Håll i." :
+              c.d > 30 ? "En månad kvar. Allt räknas nu." :
+              "Sista sprinten. Ge allt.";
+  renderCountdownBoxes('heroCountdown', c);
+  renderBcsCountdown('tipsCountdown', c);
+  const tm = document.getElementById('tipsMsg');
+  if (tm) tm.textContent = msg;
+  const hdr = document.getElementById('headerCountdown');
+  if (hdr) hdr.textContent = `⏳ ${c.d} dagar kvar`;
+}
+
+// ── SPLASH ──
+window.addEventListener('load', () => {
+  const c = getCountdown();
+  renderSplashCountdown(c);
+  setTimeout(() => {
+    document.getElementById('splash').classList.add('hide');
+    document.getElementById('app').classList.add('visible');
+    buildWeek();
+    buildTimeline();
+    updateAllCountdowns();
+    buildPhaseBar();
+    renderLogHistory();
+    loadTodayMeals();
+    renderMealPlan();
+    buildWeeklySummary();
+    setInterval(updateAllCountdowns, 30000);
+  }, 2000);
+});
+
+// ── NAV ──
+const analysisHistory = [];
+function goTab(name) { switchPanel(name); }
+
+function switchPanel(name) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab, .bn-item').forEach(el => el.classList.remove('active'));
+  const p = document.getElementById('panel-' + name);
+  if (p) { p.classList.remove('active'); void p.offsetWidth; p.classList.add('active'); }
+  document.querySelectorAll(`[data-panel="${name}"]`).forEach(el => el.classList.add('active'));
+  window.scrollTo({top:0, behavior:'smooth'});
+}
+
+document.querySelectorAll('.nav-tab, .bn-item').forEach(el => {
+  el.addEventListener('click', () => switchPanel(el.dataset.panel));
+});
+
+// ── WEEK ──
+function buildWeek() {
+  const days=['Mån','Tis','Ons','Tor','Fre','Lör','Sön'];
+  const types=['Upper A','Lower A','Vila','Upper B','Lower B','Prom','Vila'];
+  const gym=[true,true,false,true,true,false,false];
+  const today=(new Date().getDay()+6)%7;
+  const wrap=document.getElementById('weekDays');
+  days.forEach((d,i)=>{
+    const el=document.createElement('div');
+    el.className='day-item'+(gym[i]?' gym-day':' rest-day')+(i===today?' today':'');
+    el.innerHTML=`<div class="dname">${d}</div><div class="dtype">${types[i]}</div>`;
+    wrap.appendChild(el);
+  });
+}
+
+// ── SESSIONS ──
+function toggleSession(id) {
+  const s=document.getElementById(id);
+  const wasOpen=s.classList.contains('open');
+  document.querySelectorAll('.session').forEach(x=>x.classList.remove('open'));
+  if (!wasOpen) s.classList.add('open');
+}
+
+// ── TIMELINE ──
+function buildTimeline() {
+  const items=[
+    {period:'Juni–Juli',title:'Grund & vana',desc:'Kroppen anpassar sig till kost och träning. Fokus: konsistens och rätt form. Vikt ner 1–2 kg.',color:'#004D98'},
+    {period:'Augusti',title:'Synlig progress',desc:'Fettförbränningen accelererar. Magen börjar plana ut. Styrkan ökar markant. -3 till -4 kg KF totalt.',color:'#A50044'},
+    {period:'Tidig september',title:'Barcelona-kropp',desc:'Vid ankomst: synlig definition, tydlig kärna, kan ta av tröjan på stranden med självförtroende.',color:'#EDBB00'},
+  ];
+  const wrap=document.getElementById('timeline-wrap');
+  items.forEach((item,i)=>{
+    const div=document.createElement('div');
+    div.style.cssText='display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--border);';
+    if(i===items.length-1) div.style.borderBottom='none';
+    div.innerHTML=`
+      <div style="width:4px;border-radius:2px;background:${item.color};flex-shrink:0;min-height:48px;margin-top:3px;"></div>
+      <div>
+        <div style="font-family:var(--font);font-size:11px;font-weight:700;color:var(--muted);margin-bottom:3px;text-transform:uppercase;letter-spacing:0.5px;">${item.period}</div>
+        <div style="font-family:var(--font);font-size:14px;font-weight:700;margin-bottom:3px;">${item.title}</div>
+        <div style="font-size:13px;color:var(--muted);line-height:1.5;">${item.desc}</div>
+      </div>`;
+    wrap.appendChild(div);
+  });
+}
+
+// ── ANALYZER ──
+async function analyzeMeals() {
+  const frukost=document.getElementById('m-frukost').value.trim();
+  const mellan=document.getElementById('m-mellan').value.trim();
+  const lunch=document.getElementById('m-lunch').value.trim();
+  const kvall=document.getElementById('m-kvall').value.trim();
+  if (!frukost&&!mellan&&!lunch&&!kvall){alert('Fyll i minst en måltid.');return;}
+
+  const btn=document.getElementById('analyzeBtn');
+  btn.disabled=true;btn.innerHTML='<span class="spinner"></span> Analyserar...';
+  const rc=document.getElementById('resultCard');
+  const rcContent=document.getElementById('result-content');
+  rc.classList.add('visible');
+  rcContent.innerHTML='<div style="color:var(--muted);font-size:13px;padding:8px 0;">Hämtar analys...</div>';
+
+  const meals=[
+    frukost?`Frukost: ${frukost}`:'',
+    mellan?`Mellanmål: ${mellan}`:'',
+    lunch?`Lunch: ${lunch}`:'',
+    kvall?`Kvällsmat: ${kvall}`:'',
+  ].filter(Boolean).join('\n');
+
+  const prompt=`Du är världens bästa PT och kostrådgivare. Användaren är Yosef, man, 82 kg, 184 cm, tränar 4 ggr/vecka. Dagliga mål: 2550 kcal, 180g protein, 255g kolh, 90g fett. Han äter ingen gris, lite/ingen fisk. Han meal-preppar. Mål: synlig 6-pack till Barcelona september 2026.
+
+Analysera dessa måltider. Svara BARA med ett rent JSON-objekt utan markdown:
+${meals}
+
+Format:
+{"totalKcal":NUMMER,"protein":NUMMER,"kolh":NUMMER,"fett":NUMMER,"proteinBetyg":"Bra|OK|Lågt","kaloribetyg":"Bra|Lite högt|Lite lågt|För högt|För lågt","balansBetyg":"Bra|OK|Obalanserat","styrkor":["s1","s2"],"forbattringar":["f1","f2","f3"],"score":NUMMER,"summering":"2-3 meningar svenska"}`;
+
+  try {
+    const resp=await fetch("https://api.anthropic.com/v1/messages",{
+      method:"POST",headers:{"Content-Type":"application/json"},
+      body:JSON.stringify({model:"claude-sonnet-4-20250514",max_tokens:1000,messages:[{role:"user",content:prompt}]})
+    });
+    const data=await resp.json();
+    const raw=data.content.map(i=>i.text||'').join('').trim();
+    const r=JSON.parse(raw.replace(/```json|```/g,'').trim());
+    renderResult(r);
+    analysisHistory.unshift({meals,result:r,date:new Date()});
+    renderHistory();
+  } catch(err) {
+    rcContent.innerHTML=`<div style="color:#A50044;font-size:13px;">Kunde inte analysera. Försök igen.</div>`;
+  }
+  btn.disabled=false;btn.innerHTML='Analysera mina måltider';
+}
+
+function badgeClass(v){
+  if(v==='Bra') return 'rb-good';
+  if(['OK','Lite högt','Lite lågt','Obalanserat'].includes(v)) return 'rb-warn';
+  return 'rb-bad';
+}
+
+function renderResult(r) {
+  const sc=r.score;
+  const scC=sc>=7?'#1a6b3a':sc>=5?'#d45a14':'#A50044';
+  const scB=sc>=7?'#e8f5ee':sc>=5?'#fdf0e8':'#fce8f0';
+  document.getElementById('result-title').textContent=`Analys — ${r.totalKcal} kcal`;
+  const badge=document.getElementById('score-badge');
+  badge.textContent=sc;badge.style.background=scB;badge.style.color=scC;
+
+  const pw=Math.min(100,Math.round(r.protein*4/r.totalKcal*100));
+  const kw=Math.min(100,Math.round(r.kolh*4/r.totalKcal*100));
+  const fw=Math.min(100,Math.round(r.fett*9/r.totalKcal*100));
+  const styrkor=(r.styrkor||[]).map(s=>`<span class="chip chip-good">✓ ${s}</span>`).join('');
+  const forb=(r.forbattringar||[]).map(f=>`<span class="chip chip-fix">→ ${f}</span>`).join('');
+
+  document.getElementById('result-content').innerHTML=`
+    <div class="macro-track" style="margin-bottom:8px;">
+      <div class="macro-seg" style="width:${pw}%;background:#004D98;"></div>
+      <div class="macro-seg" style="width:${kw}%;background:#3db870;"></div>
+      <div class="macro-seg" style="width:${fw}%;background:#EDBB00;"></div>
+    </div>
+    <div class="macro-legend" style="margin-bottom:14px;">
+      <div class="mdot-row"><div class="mdot" style="background:#004D98;"></div>Protein ${r.protein}g</div>
+      <div class="mdot-row"><div class="mdot" style="background:#3db870;"></div>Kolh ${r.kolh}g</div>
+      <div class="mdot-row"><div class="mdot" style="background:#EDBB00;"></div>Fett ${r.fett}g</div>
+    </div>
+    <div class="rating-rows">
+      <div class="rating-row"><span class="rating-label">Protein</span><span class="rbadge ${badgeClass(r.proteinBetyg)}">${r.proteinBetyg}</span></div>
+      <div class="rating-row"><span class="rating-label">Kalorier</span><span class="rbadge ${badgeClass(r.kaloribetyg)}">${r.kaloribetyg}</span></div>
+      <div class="rating-row"><span class="rating-label">Balans</span><span class="rbadge ${badgeClass(r.balansBetyg)}">${r.balansBetyg}</span></div>
+    </div>
+    ${styrkor?`<div style="font-family:var(--font);font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin:10px 0 5px;">Styrkor</div><div class="chips">${styrkor}</div>`:''}
+    ${forb?`<div style="font-family:var(--font);font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.8px;margin:10px 0 5px;">Förbättringar</div><div class="chips">${forb}</div>`:''}
+    <div class="summary-box">${r.summering}</div>`;
+}
+
+function renderHistory() {
+  const el=document.getElementById('history-list');
+  if (!analysisHistory.length){
+    el.innerHTML='<div class="empty"><div class="ei">📋</div><p>Inga analyser ännu.</p></div>';return;
+  }
+  el.innerHTML=analysisHistory.map((h,i)=>{
+    const sc=h.result.score;
+    const scC=sc>=7?'#1a6b3a':sc>=5?'#d45a14':'#A50044';
+    const scB=sc>=7?'#e8f5ee':sc>=5?'#fdf0e8':'#fce8f0';
+    const names=h.meals.split('\n').map(m=>m.split(':')[0]).join(' · ');
+    const t=h.date.toLocaleTimeString('sv-SE',{hour:'2-digit',minute:'2-digit'});
+    return `<div class="he" onclick="showHistory(${i})">
+      <div class="he-score" style="background:${scB};color:${scC}">${sc}</div>
+      <div class="he-info"><div class="he-title">${names}</div><div class="he-meta">${t} · ${h.result.totalKcal} kcal · ${h.result.protein}g protein</div></div>
+      <span style="color:var(--dim);font-size:16px;">›</span>
+    </div>`;
+  }).join('');
+}
+
+// ── PHASE SYSTEM ──
+const PHASES = [
+  {label:'Fas 1\nGrund',    weeks:'V1–4',  color:'#004D98', start:0,  end:4},
+  {label:'Fas 2\nUppbygg', weeks:'V5–8',  color:'#3db870', start:4,  end:8},
+  {label:'Fas 3\nPeak',    weeks:'V9–11', color:'#A50044', start:8,  end:11},
+  {label:'Fas 4\nDeload',  weeks:'V12',   color:'#EDBB00', start:11, end:12},
+];
+const PROGRAM_START = new Date('2026-06-10');
+
+function getCurrentPhase() {
+  const now = new Date();
+  const weekNum = Math.floor((now - PROGRAM_START) / (7*24*3600*1000));
+  return PHASES.findIndex(p => weekNum >= p.start && weekNum < p.end);
+}
+
+function buildPhaseBar() {
+  const bar = document.getElementById('phaseBar');
+  const desc = document.getElementById('phaseDesc');
+  if (!bar) return;
+  const currentIdx = getCurrentPhase();
+  const widths = [33, 33, 25, 9];
+  bar.innerHTML = PHASES.map((p,i) => {
+    const isCurrent = i === currentIdx;
+    return `<div class="phase-seg${isCurrent?' current':''}" style="background:${p.color};flex:${widths[i]};opacity:${isCurrent?1:0.45};" title="${p.weeks}">${p.label.replace('\n','<br>')}</div>`;
+  }).join('');
+  if (currentIdx >= 0) {
+    const p = PHASES[currentIdx];
+    const weekNum = Math.floor((new Date() - PROGRAM_START) / (7*24*3600*1000)) + 1;
+    const phaseWeek = weekNum - p.start;
+    const descs = [
+      `Du är i <strong>Fas 1 (vecka ${phaseWeek}/4)</strong> — fokus på teknik, hitta dina startvikter, bygg 4-passvanans rytm. Vikterna kommer gå upp snabbt nu.`,
+      `Du är i <strong>Fas 2 (vecka ${phaseWeek}/4)</strong> — öka volymen, extra sett på compound, ny isolationsövning per pass. Kroppen bygger nu.`,
+      `Du är i <strong>Fas 3 (vecka ${phaseWeek}/3)</strong> — tyngre vikter, lägre reps. Sänk kalorierna något. Sista sprinten mot Barcelona.`,
+      `Du är i <strong>Fas 4 — Deload</strong> — halvera volymen, behåll vikten. Vila och supercompensera. Du kommer se bäst ut dagarna i Barcelona.`,
+    ];
+    desc.innerHTML = descs[currentIdx];
+  } else {
+    desc.textContent = weekNum > 12 ? 'Programmet klart — välkommen till Barcelona! 🌊' : 'Programmet startar 10 juni 2026.';
+  }
+}
+
+// ── LOG DATA ──
+const SESSIONS = {
+  ua: {
+    name:'Upper A — Styrka', day:'Måndag',
+    exercises:[
+      {name:'Bänkpress — skivstång',       target:'4 × 4–6', sets:4},
+      {name:'Lat pulldown',                 target:'4 × 6–8', sets:4},
+      {name:'Pendlay row — skivstång',      target:'4 × 5–7', sets:4},
+      {name:'Overhead press — skivstång',   target:'3 × 5–7', sets:3},
+      {name:'Face pulls — kabel',           target:'3 × 15–20',sets:3},
+      {name:'Hängande knälyft',             target:'3 × 10–15',sets:3},
+      {name:'Farmer\'s carry',              target:'3 × 40 m', sets:3},
+      {name:'Dead hang',                    target:'2 × max',  sets:2},
+    ]
+  },
+  la: {
+    name:'Lower A — Styrka', day:'Tisdag',
+    exercises:[
+      {name:'Knäböj — skivstång',           target:'4 × 4–6', sets:4},
+      {name:'Leg press — bred fot',         target:'3 × 6–8', sets:3},
+      {name:'Konventionell marklyft',       target:'3 × 4–5', sets:3},
+      {name:'Leg curl — liggande',          target:'3 × 8–10', sets:3},
+      {name:'Ab wheel rollout',             target:'3 × 8–10', sets:3},
+      {name:'Kalvhävningar — stående',      target:'4 × 10–12',sets:4},
+    ]
+  },
+  ub: {
+    name:'Upper B — Volym', day:'Torsdag',
+    exercises:[
+      {name:'Lutande hantelpress',          target:'4 × 8–10', sets:4},
+      {name:'Kabelflyes — låg-till-hög',    target:'3 × 12–15',sets:3},
+      {name:'Sittande kabelrodd',           target:'4 × 10–12',sets:4},
+      {name:'Lat pulldown — brett grepp',   target:'3 × 10–12',sets:3},
+      {name:'Lateral raises — hantlar',     target:'4 × 12–15',sets:4},
+      {name:'EZ-bar bicep curl',            target:'3 × 10–12',sets:3},
+      {name:'Triceps pushdown',             target:'3 × 12–15',sets:3},
+      {name:'Cable crunch',                 target:'3 × 12–15',sets:3},
+      {name:'Wrist curl',                   target:'3 × 15–20',sets:3},
+      {name:'Reverse wrist curl',           target:'3 × 15–20',sets:3},
+      {name:'Dead hang',                    target:'2 × max',  sets:2},
+    ]
+  },
+  lb: {
+    name:'Lower B — Volym', day:'Fredag',
+    exercises:[
+      {name:'Hip thrust — skivstång',       target:'4 × 8–10', sets:4},
+      {name:'Bulgarian split squat',        target:'3 × 10–12/ben',sets:3},
+      {name:'Romanian deadlift — hantlar',  target:'3 × 10–12',sets:3},
+      {name:'Leg extension — maskin',       target:'3 × 12–15',sets:3},
+      {name:'Leg curl — sittande',          target:'3 × 12–15',sets:3},
+      {name:'Hängande benlyft — rak',       target:'3 × 10–15',sets:3},
+      {name:'Seated calf raise',            target:'4 × 12–15',sets:4},
+    ]
+  }
+};
+
+let currentSession = null;
+// Safe storage (works in private/incognito too)
+const safeStorage = {
+  _mem: {},
+  get(k) { try { return localStorage.getItem(k); } catch(e) { return this._mem[k]||null; } },
+  set(k,v) { try { localStorage.setItem(k,v); } catch(e) { this._mem[k]=v; } }
+};
+
+let logHistory = JSON.parse(safeStorage.get('bcn_log') || '[]');
+let personalBests = JSON.parse(safeStorage.get('bcn_pbs') || '{}');
+
+function saveToStorage() {
+  safeStorage.set('bcn_log', JSON.stringify(logHistory));
+  safeStorage.set('bcn_pbs', JSON.stringify(personalBests));
+}
+
+function selectSession(key) {
+  currentSession = key;
+  document.querySelectorAll('.lss-btn').forEach(b => b.classList.remove('selected'));
+  document.getElementById('lss-'+key).classList.add('selected');
+  renderLogForm(key);
+}
+
+function renderLogForm(key) {
+  const s = SESSIONS[key];
+  const form = document.getElementById('logForm');
+  form.style.display = 'block';
+  document.getElementById('logFormTitle').textContent = `Loggar: ${s.name}`;
+
+  const container = document.getElementById('logExercises');
+  container.innerHTML = s.exercises.map((ex, ei) => {
+    const pb = personalBests[ex.name];
+    const pbHtml = pb ? `<span class="lhe-pr">PR: ${pb.weight}kg × ${pb.reps}</span>` : '';
+    const setsHtml = Array.from({length: ex.sets}, (_, si) => `
+      <div class="log-set-row" id="setrow-${ei}-${si}">
+        <div class="log-set-num">${si+1}</div>
+        <input class="log-input" type="number" inputmode="decimal" placeholder="kg" id="w-${ei}-${si}" min="0" step="0.5">
+        <input class="log-input" type="number" inputmode="numeric" placeholder="reps" id="r-${ei}-${si}" min="0" step="1">
+        <div class="log-check" onclick="toggleCheck(${ei},${si})" id="chk-${ei}-${si}">○</div>
+      </div>`).join('');
+    return `
+      <div class="log-exercise-card">
+        <div class="log-ex-head">
+          <div>
+            <div class="log-ex-name">${ex.name} ${pbHtml}</div>
+            <div class="log-ex-target">${ex.target}</div>
+          </div>
+        </div>
+        <div class="log-sets">
+          <div class="col-hdr"><div></div><div>Vikt (kg)</div><div>Reps</div><div></div></div>
+          ${setsHtml}
+          <button class="log-add-set" onclick="addSet(${ei})">+ Lägg till sett</button>
+        </div>
+      </div>`;
+  }).join('');
+  container.scrollIntoView({behavior:'smooth', block:'start'});
+}
+
+function toggleCheck(ei, si) {
+  const btn = document.getElementById(`chk-${ei}-${si}`);
+  const done = btn.classList.toggle('done');
+  btn.textContent = done ? '✓' : '○';
+}
+
+function addSet(ei) {
+  const card = document.getElementById('logExercises').querySelectorAll('.log-exercise-card')[ei];
+  const setsDiv = card.querySelector('.log-sets');
+  const existingSets = setsDiv.querySelectorAll('.log-set-row').length;
+  const newRow = document.createElement('div');
+  const si = existingSets;
+  newRow.className = 'log-set-row';
+  newRow.id = `setrow-${ei}-${si}`;
+  newRow.innerHTML = `
+    <div class="log-set-num">${si+1}</div>
+    <input class="log-input" type="number" inputmode="decimal" placeholder="kg" id="w-${ei}-${si}" min="0" step="0.5">
+    <input class="log-input" type="number" inputmode="numeric" placeholder="reps" id="r-${ei}-${si}" min="0" step="1">
+    <div class="log-check" onclick="toggleCheck(${ei},${si})" id="chk-${ei}-${si}">○</div>`;
+  setsDiv.querySelector('.log-add-set').before(newRow);
+}
+
+function saveLog() {
+  if (!currentSession) return;
+  const s = SESSIONS[currentSession];
+  const entry = {
+    id: Date.now(),
+    sessionKey: currentSession,
+    sessionName: s.name,
+    date: new Date().toISOString(),
+    notes: document.getElementById('logNotes').value,
+    exercises: [],
+    newPRs: []
+  };
+
+  s.exercises.forEach((ex, ei) => {
+    const setsData = [];
+    let si = 0;
+    while (document.getElementById(`w-${ei}-${si}`)) {
+      const w = parseFloat(document.getElementById(`w-${ei}-${si}`).value) || 0;
+      const r = parseInt(document.getElementById(`r-${ei}-${si}`).value) || 0;
+      const done = document.getElementById(`chk-${ei}-${si}`)?.classList.contains('done');
+      if (w > 0 || r > 0) setsData.push({weight:w, reps:r, done});
+      si++;
+    }
+    if (setsData.length > 0) {
+      entry.exercises.push({name: ex.name, sets: setsData});
+      // Check PR
+      const maxWeight = Math.max(...setsData.map(s => s.weight));
+      const maxReps = setsData.find(s => s.weight === maxWeight)?.reps || 0;
+      const existing = personalBests[ex.name];
+      if (!existing || maxWeight > existing.weight || (maxWeight === existing.weight && maxReps > existing.reps)) {
+        if (maxWeight > 0) {
+          personalBests[ex.name] = {weight: maxWeight, reps: maxReps};
+          entry.newPRs.push(ex.name);
+        }
+      }
+    }
+  });
+
+  logHistory.unshift(entry);
+  saveToStorage();
+  renderLogHistory();
+
+  if (entry.newPRs.length > 0) {
+    showToast(`🏆 Nytt PR på ${entry.newPRs[0]}!`);
+  } else {
+    showToast('✅ Pass sparat!');
+  }
+
+  // Reset form
+  document.getElementById('logNotes').value = '';
+  document.querySelectorAll('.log-check').forEach(c => { c.classList.remove('done'); c.textContent = '○'; });
+  document.querySelectorAll('.log-input').forEach(i => i.value = '');
+}
+
+function renderLogHistory() {
+  const el = document.getElementById('logHistoryList');
+  if (!logHistory.length) {
+    el.innerHTML = '<div class="empty"><div class="ei">📋</div><p>Inga loggade pass ännu.<br>Välj ett pass ovan för att börja.</p></div>';
+    return;
+  }
+  el.innerHTML = logHistory.map((entry, i) => {
+    const d = new Date(entry.date);
+    const dateStr = d.toLocaleDateString('sv-SE', {day:'numeric', month:'short'});
+    const timeStr = d.toLocaleTimeString('sv-SE', {hour:'2-digit', minute:'2-digit'});
+    const totalSets = entry.exercises.reduce((acc, ex) => acc + ex.sets.filter(s=>s.done||s.weight>0).length, 0);
+    const prBadge = entry.newPRs.length > 0 ? `<span class="lhe-pr">🏆 ${entry.newPRs.length} PR</span>` : '';
+    return `<div class="log-history-entry" onclick="expandLogEntry(${i})">
+      <div class="lhe-header">
+        <div>
+          <div class="lhe-title">${entry.sessionName} ${prBadge}</div>
+          <div class="lhe-date">${dateStr} kl ${timeStr}</div>
+        </div>
+      </div>
+      <div class="lhe-stats">
+        <div class="lhe-stat"><strong>${entry.exercises.length}</strong> övningar</div>
+        <div class="lhe-stat"><strong>${totalSets}</strong> sett</div>
+        ${entry.notes ? `<div class="lhe-stat" style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">"${entry.notes}"</div>` : ''}
+      </div>
+      <div id="logDetail-${i}" style="display:none;margin-top:10px;border-top:1px solid var(--border);padding-top:10px;">
+        ${entry.exercises.map(ex => `
+          <div style="margin-bottom:8px;">
+            <div style="font-family:var(--font);font-size:12px;font-weight:700;margin-bottom:3px;">${ex.name}</div>
+            <div style="display:flex;flex-wrap:wrap;gap:4px;">
+              ${ex.sets.map((s,si) => `<span style="background:${s.done?'var(--blue-light)':'var(--off)'};border:1px solid ${s.done?'#a8c4e8':'var(--border)'};border-radius:6px;padding:3px 8px;font-size:12px;font-family:var(--font);font-weight:600;color:${s.done?'var(--barca-blue)':'var(--muted)'}">${s.weight>0?s.weight+'kg':'–'} × ${s.reps>0?s.reps:'–'}</span>`).join('')}
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function expandLogEntry(i) {
+  const d = document.getElementById(`logDetail-${i}`);
+  if (d) d.style.display = d.style.display === 'none' ? 'block' : 'none';
+}
+
+function showToast(msg) {
+  const t = document.getElementById('pbToast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2800);
+}
+
+
+// ── MEAL PLAN ──
+const MACRO_GOALS = {kcal:2550, protein:180, kolh:255, fett:90};
+
+const DEFAULT_MEALS = [
+  {id:1, time:'07:00', name:'Overnight oats',      desc:'Havregryn 80g · Kvarg 150g · Bär 100g · Honung 1 tsk', kcal:490, protein:28, kolh:72, fett:8},
+  {id:2, time:'10:00', name:'Proteinsmoothie',      desc:'1 scoop vassle · Banan · Mjölk 2 dl · Jordnötssmör 1 msk', kcal:380, protein:35, kolh:38, fett:10},
+  {id:3, time:'13:00', name:'Meal-prep lunch',      desc:'Kycklingbröst 220g · Ris 170g kokt · Paprika + olivolja', kcal:580, protein:52, kolh:68, fett:10},
+  {id:4, time:'16:30', name:'Pre-workout',          desc:'Banan · 25g mandel · Svart kaffe', kcal:250, protein:6, kolh:34, fett:10},
+  {id:5, time:'19:30', name:'Kvällsmat',            desc:'Kycklinglår 220g · Sötpotatis 180g · Broccoli + olivolja', kcal:600, protein:48, kolh:56, fett:14},
+  {id:6, time:'21:30', name:'Kvällssnack',          desc:'Kvarg 150g + kanel', kcal:140, protein:18, kolh:10, fett:2},
+];
+
+let mealPlan = JSON.parse(safeStorage.get('bcn_meals') || 'null') || DEFAULT_MEALS.map(m=>({...m}));
+let nextMealId = Math.max(...mealPlan.map(m=>m.id)) + 1;
+
+function saveMeals() {
+  safeStorage.set('bcn_meals', JSON.stringify(mealPlan));
+}
+
+function getMeal(id) { return mealPlan.find(m=>m.id===id); }
+
+function updateMacroSummary() {
+  const totals = mealPlan.reduce((acc,m)=>{
+    acc.kcal    += (parseFloat(m.kcal)||0);
+    acc.protein += (parseFloat(m.protein)||0);
+    acc.kolh    += (parseFloat(m.kolh)||0);
+    acc.fett    += (parseFloat(m.fett)||0);
+    return acc;
+  }, {kcal:0,protein:0,kolh:0,fett:0});
+
+  document.getElementById('totalKcalDisplay').textContent = Math.round(totals.kcal);
+  document.getElementById('proteinVal').innerHTML = Math.round(totals.protein)+'<span style="font-size:11px;">g</span>';
+  document.getElementById('kolhVal').innerHTML    = Math.round(totals.kolh)+'<span style="font-size:11px;">g</span>';
+  document.getElementById('fettVal').innerHTML    = Math.round(totals.fett)+'<span style="font-size:11px;">g</span>';
+
+  const kpct = Math.min(115, Math.round(totals.kcal/MACRO_GOALS.kcal*100));
+  document.getElementById('kcalBar').style.width = kpct+'%';
+  document.getElementById('kcalBar').style.background = kpct>105 ? 'var(--barca-red)' : kpct>=88 ? 'var(--barca-blue)' : '#5B9BD5';
+  document.getElementById('proteinBar').style.width = Math.min(100, Math.round(totals.protein/MACRO_GOALS.protein*100))+'%';
+  document.getElementById('kolhBar').style.width    = Math.min(100, Math.round(totals.kolh/MACRO_GOALS.kolh*100))+'%';
+  document.getElementById('fettBar').style.width    = Math.min(100, Math.round(totals.fett/MACRO_GOALS.fett*100))+'%';
+
+  const diff  = Math.round(totals.kcal - MACRO_GOALS.kcal);
+  const pDiff = Math.round(totals.protein - MACRO_GOALS.protein);
+  let msg='', bg='var(--off)', col='var(--muted)';
+  if (totals.kcal===0){ msg='Inga måltider loggade ännu.'; }
+  else if (diff>250)  { msg=`${diff} kcal över målet — minska portionerna lite.`; bg='var(--red-light)'; col='var(--barca-red)'; }
+  else if (diff<-350) { msg=`${Math.abs(diff)} kcal under målet — lägg till ett mellanmål.`; bg='var(--orange-light)'; col='var(--orange)'; }
+  else if (pDiff<-30) { msg=`Protein ${Math.abs(pDiff)}g under mål — lägg till en proteinkälla.`; bg='var(--orange-light)'; col='var(--orange)'; }
+  else if (diff>=-200 && diff<=200 && pDiff>=-15){ msg='✅ Perfekt balans — du träffar dina mål!'; bg='var(--green-light)'; col='var(--green)'; }
+  else { msg=`${Math.abs(diff)} kcal ${diff>0?'över':'under'} mål.`; }
+  const el=document.getElementById('macroStatusMsg');
+  el.textContent=msg; el.style.background=bg; el.style.color=col;
+}
+
+let openMealId = null;
+
+function renderMealPlan() {
+  const container = document.getElementById('mealPlanContainer');
+  if (!container) return;
+  const sorted = [...mealPlan].sort((a,b)=>a.time.localeCompare(b.time));
+  container.innerHTML = sorted.map(meal => renderMealCard(meal,'plan')).join('');
+  updateMacroSummaryFor(mealPlan, false);
+}
+
+function toggleMeal(id) {
+  openMealId = openMealId===id ? null : id;
+  renderMealPlan();
+  if (openMealId) setTimeout(()=>{ const el=document.getElementById(`mtl-plan-${id}`); if(el) el.scrollIntoView({behavior:'smooth',block:'nearest'}); },50);
+}
+function rerenderMeal(id) { renderMealPlan(); }
+function updateMealField(id,field,value) { const m=getMeal(id); if(!m) return; m[field]=value; saveMeals(); }
+function updateMacro(id,field,value) {
+  const m=getMeal(id); if(!m) return;
+  m[field]=parseFloat(value)||0;
+  m.kcal=Math.round((m.protein||0)*4+(m.kolh||0)*4+(m.fett||0)*9);
+  const el=document.getElementById(`kcal-plan-${id}`); if(el) el.textContent=m.kcal;
+  saveMeals(); updateMacroSummaryFor(mealPlan,false);
+}
+function deleteMeal(id) { openMealId=null; mealPlan=mealPlan.filter(m=>m.id!==id); saveMeals(); renderMealPlan(); }
+function copyToMeal(el) {
+  const text=el.textContent.replace(/^[^\s]+\s/,'');
+  const target = activeKostTab==='idag' ? (openTodayMealId?todayMealPlan.find(m=>m.id===openTodayMealId):todayMealPlan[todayMealPlan.length-1]) : (openMealId?getMeal(openMealId):mealPlan[mealPlan.length-1]);
+  if(!target) return;
+  target.desc=target.desc?target.desc+' · '+text:text;
+  if(activeKostTab==='idag'){saveTodayMeals();const ta=document.querySelector(`#edit-today-${target.id} .edit-desc-input`);if(ta)ta.value=target.desc;}
+  else{saveMeals();const ta=document.querySelector(`#edit-plan-${target.id} .edit-desc-input`);if(ta)ta.value=target.desc;}
+  el.style.background='var(--barca-blue)';el.style.color='var(--white)';
+  setTimeout(()=>{el.style.background='';el.style.color='';},500);
+}
+function updateMacroSummary() { updateMacroSummaryFor(mealPlan,false); }
+
+
+
+
+// ── WEEKLY SUMMARY ──
+function getWeekBounds() {
+  const now = new Date();
+  const day = now.getDay(); // 0=sun
+  const mon = new Date(now); mon.setDate(now.getDate() - ((day+6)%7)); mon.setHours(0,0,0,0);
+  const sun = new Date(mon); sun.setDate(mon.getDate()+6); sun.setHours(23,59,59,999);
+  return {mon, sun};
+}
+
+function buildWeeklySummary() {
+  const {mon, sun} = getWeekBounds();
+  const weekNum = Math.ceil((new Date() - PROGRAM_START) / (7*24*3600*1000));
+  const wlEl = document.getElementById('ws-week-label');
+  if (wlEl) wlEl.textContent = `V${Math.max(1,weekNum)}`;
+
+  // Count sessions this week
+  const weekSessions = logHistory.filter(h => {
+    const d = new Date(h.date); return d >= mon && d <= sun;
+  });
+  const sessCount = weekSessions.length;
+  const sessEl = document.getElementById('ws-pass');
+  if (sessEl) sessEl.textContent = `${sessCount}/4`;
+
+  // Count today's food log days this week
+  const todayDays = [];
+  for (let i=0; i<7; i++) {
+    const d = new Date(mon); d.setDate(mon.getDate()+i);
+    const key = 'bcn_today_'+d.toISOString().slice(0,10);
+    try { if (safeStorage.get(key)) todayDays.push(d); } catch(e){}
+  }
+  const kostEl = document.getElementById('ws-kost');
+  if (kostEl) kostEl.textContent = `${todayDays.length}/7`;
+
+  // Latest PR per session
+  const prSummary = {};
+  logHistory.forEach(h => { if(h.newPRs?.length) prSummary[h.sessionName] = h.newPRs; });
+
+  const content = document.getElementById('weeklySummaryContent');
+  if (!content) return;
+
+  // Pass progress
+  const passColor = sessCount>=4?'var(--green)':sessCount>=2?'var(--barca-blue)':'var(--orange)';
+  const sessDays = ['ua','la','ub','lb'].map(k => {
+    const done = weekSessions.some(s=>s.sessionKey===k);
+    const names = {ua:'Upper A',la:'Lower A',ub:'Upper B',lb:'Lower B'};
+    return `<span style="font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px;background:${done?'var(--green-light)':'var(--off)'};color:${done?'var(--green)':'var(--dim)'};border:1px solid ${done?'#a8d9bd':'var(--border)'};">${done?'✓':''} ${names[k]}</span>`;
+  }).join('');
+
+  // Latest PRs this week
+  const weekPRs = weekSessions.flatMap(s=>s.newPRs||[]);
+  const prHtml = weekPRs.length
+    ? `<div style="margin-top:10px;"><div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:5px;">🏆 PR denna vecka</div><div style="display:flex;flex-wrap:wrap;gap:5px;">${weekPRs.slice(0,4).map(p=>`<span style="font-size:11px;font-weight:600;background:var(--gold-light);color:#7a5c00;padding:3px 8px;border-radius:6px;">${p}</span>`).join('')}</div></div>`
+    : '';
+
+  // Kost streak
+  const todayKey = 'bcn_today_'+new Date().toISOString().slice(0,10);
+  const loggedToday = !!safeStorage.get(todayKey);
+
+  content.innerHTML = `
+    <div style="margin-bottom:10px;">
+      <div style="font-size:11px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:0.6px;margin-bottom:6px;">Pass klara</div>
+      <div style="display:flex;flex-wrap:wrap;gap:5px;">${sessDays}</div>
+    </div>
+    <div style="display:flex;gap:10px;">
+      <div style="flex:1;background:${loggedToday?'var(--green-light)':'var(--off)'};border:1px solid ${loggedToday?'#a8d9bd':'var(--border)'};border-radius:10px;padding:10px;text-align:center;">
+        <div style="font-size:18px;">${loggedToday?'✅':'📋'}</div>
+        <div style="font-family:var(--font);font-size:11px;font-weight:700;color:${loggedToday?'var(--green)':'var(--muted)'};margin-top:3px;">${loggedToday?'Mat loggad':'Mat ej loggad'}</div>
+      </div>
+      <div style="flex:1;background:var(--off);border:1px solid var(--border);border-radius:10px;padding:10px;text-align:center;">
+        <div style="font-family:var(--font);font-size:20px;font-weight:900;color:${passColor};">${sessCount}/4</div>
+        <div style="font-size:11px;font-weight:700;color:var(--muted);margin-top:1px;">Pass vecka</div>
+      </div>
+    </div>
+    ${prHtml}`;
+}
+
+// ── KOST TABS ──
+let activeKostTab = 'plan';
+let openTodayMealId = null;
+let todayMealPlan = [];
+let nextTodayId = 100;
+
+function switchKostTab(tab) {
+  activeKostTab = tab;
+  document.getElementById('kt-plan').classList.toggle('active', tab==='plan');
+  document.getElementById('kt-idag').classList.toggle('active', tab==='idag');
+  document.getElementById('kostTabPlan').style.display = tab==='plan' ? 'block' : 'none';
+  document.getElementById('kostTabIdag').style.display = tab==='idag' ? 'block' : 'none';
+  document.getElementById('diffRow').style.display = tab==='idag' ? 'block' : 'none';
+  document.getElementById('macroCardTitle').textContent = tab==='plan' ? 'Planens makron' : 'Dagens makron';
+  if (tab==='plan') { openMealId=null; renderMealPlan(); }
+  else { openTodayMealId=null; renderTodayPlan(); }
+}
+
+function loadTodayMeals() {
+  const key = 'bcn_today_'+new Date().toISOString().slice(0,10);
+  todayMealPlan = JSON.parse(safeStorage.get(key)||'[]');
+  nextTodayId = todayMealPlan.length ? Math.max(...todayMealPlan.map(m=>m.id))+1 : 100;
+}
+
+function saveTodayMeals() {
+  const key = 'bcn_today_'+new Date().toISOString().slice(0,10);
+  safeStorage.set(key, JSON.stringify(todayMealPlan));
+  buildWeeklySummary();
+}
+
+function clearToday() {
+  if (!confirm('Rensa hela dagens logg?')) return;
+  todayMealPlan = [];
+  saveTodayMeals();
+  renderTodayPlan();
+}
+
+function renderTodayPlan() {
+  const container = document.getElementById('todayMealContainer');
+  if (!container) return;
+  if (!todayMealPlan.length) {
+    container.innerHTML = '<div class="empty" style="padding:24px 0;"><div class="ei">🍽️</div><p>Inga måltider loggade idag ännu.</p></div>';
+    updateMacroSummaryFor(todayMealPlan, true);
+    return;
+  }
+  const sorted = [...todayMealPlan].sort((a,b)=>a.time.localeCompare(b.time));
+  container.innerHTML = sorted.map(meal => renderMealCard(meal, 'today')).join('');
+  updateMacroSummaryFor(todayMealPlan, true);
+}
+
+function updateMacroSummaryFor(meals, showDiff) {
+  const totals = meals.reduce((acc,m)=>({
+    kcal: acc.kcal+(parseFloat(m.kcal)||0),
+    protein: acc.protein+(parseFloat(m.protein)||0),
+    kolh: acc.kolh+(parseFloat(m.kolh)||0),
+    fett: acc.fett+(parseFloat(m.fett)||0)
+  }), {kcal:0,protein:0,kolh:0,fett:0});
+
+  document.getElementById('totalKcalDisplay').textContent = Math.round(totals.kcal);
+  document.getElementById('proteinVal').innerHTML = Math.round(totals.protein)+'<span style="font-size:11px;">g</span>';
+  document.getElementById('kolhVal').innerHTML    = Math.round(totals.kolh)+'<span style="font-size:11px;">g</span>';
+  document.getElementById('fettVal').innerHTML    = Math.round(totals.fett)+'<span style="font-size:11px;">g</span>';
+  const kpct = Math.min(115,Math.round(totals.kcal/MACRO_GOALS.kcal*100));
+  document.getElementById('kcalBar').style.width = kpct+'%';
+  document.getElementById('kcalBar').style.background = kpct>108?'var(--barca-red)':kpct>=88?'var(--barca-blue)':'#5B9BD5';
+  document.getElementById('proteinBar').style.width = Math.min(100,Math.round(totals.protein/MACRO_GOALS.protein*100))+'%';
+  document.getElementById('kolhBar').style.width    = Math.min(100,Math.round(totals.kolh/MACRO_GOALS.kolh*100))+'%';
+  document.getElementById('fettBar').style.width    = Math.min(100,Math.round(totals.fett/MACRO_GOALS.fett*100))+'%';
+
+  if (showDiff) {
+    const planTotals = mealPlan.reduce((acc,m)=>({
+      kcal:acc.kcal+(parseFloat(m.kcal)||0), protein:acc.protein+(parseFloat(m.protein)||0),
+      kolh:acc.kolh+(parseFloat(m.kolh)||0), fett:acc.fett+(parseFloat(m.fett)||0)
+    }), {kcal:0,protein:0,kolh:0,fett:0});
+    const diffs = [
+      {lbl:'Kcal',  val:Math.round(totals.kcal-planTotals.kcal),    unit:''},
+      {lbl:'Protein',val:Math.round(totals.protein-planTotals.protein),unit:'g'},
+      {lbl:'Kolh',  val:Math.round(totals.kolh-planTotals.kolh),    unit:'g'},
+      {lbl:'Fett',  val:Math.round(totals.fett-planTotals.fett),    unit:'g'},
+    ];
+    document.getElementById('diffGrid').innerHTML = diffs.map(d => {
+      const pos=d.val>0, zero=d.val===0;
+      const bg=zero?'var(--off)':pos?'var(--red-light)':'var(--green-light)';
+      const col=zero?'var(--muted)':pos?'var(--barca-red)':'var(--green)';
+      return `<div class="diff-pill" style="background:${bg};color:${col};">
+        <div class="dp-val">${d.val>0?'+':''}${d.val}${d.unit}</div>
+        <div class="dp-lbl">${d.lbl}</div>
+      </div>`;
+    }).join('');
+  }
+
+  const diff = Math.round(totals.kcal-MACRO_GOALS.kcal);
+  const pDiff = Math.round(totals.protein-MACRO_GOALS.protein);
+  let msg='',bg='var(--off)',col='var(--muted)';
+  if(!meals.length){ msg='Inga måltider ännu.'; }
+  else if(diff>250){ msg=`${diff} kcal över målet.`; bg='var(--red-light)'; col='var(--barca-red)'; }
+  else if(diff<-350){ msg=`${Math.abs(diff)} kcal under målet.`; bg='var(--orange-light)'; col='var(--orange)'; }
+  else if(pDiff<-30){ msg=`Protein ${Math.abs(pDiff)}g under mål.`; bg='var(--orange-light)'; col='var(--orange)'; }
+  else if(diff>=-200&&diff<=200&&pDiff>=-15){ msg='✅ Perfekt balans!'; bg='var(--green-light)'; col='var(--green)'; }
+  else { msg=`${Math.abs(diff)} kcal ${diff>0?'över':'under'} mål.`; }
+  const el=document.getElementById('macroStatusMsg');
+  el.textContent=msg; el.style.background=bg; el.style.color=col;
+}
+
+function renderMealCard(meal, mode) {
+  const isToday = mode==='today';
+  const openId = isToday ? openTodayMealId : openMealId;
+  const hasData = meal.kcal>0||meal.protein>0;
+  const isOpen = openId===meal.id;
+  const fn = isToday ? 'toggleTodayMeal' : 'toggleMeal';
+  const updateFn = isToday ? 'updateTodayField' : 'updateMealField';
+  const macroFn = isToday ? 'updateTodayMacro' : 'updateMacro';
+  const delFn = isToday ? 'deleteTodayMeal' : 'deleteMeal';
+  const pills = hasData ? `<div class="mtl-macros">
+    <span class="mtl-macro-pill mp-p">P ${meal.protein||0}g</span>
+    <span class="mtl-macro-pill mp-k">K ${meal.kolh||0}g</span>
+    <span class="mtl-macro-pill mp-f">F ${meal.fett||0}g</span>
+  </div>` : '';
+  return `
+  <div class="mtl-item${hasData?' has-data':''}${isOpen?' editing':''}" id="mtl-${mode}-${meal.id}">
+    <div class="mtl-time-dot" style="font-size:10px;font-weight:800;color:${hasData?'var(--barca-blue)':'var(--dim)'};">${meal.time.replace(':','<br>')}</div>
+    <div class="mtl-card">
+      <div class="mtl-summary" onclick="${fn}(${meal.id})">
+        <div class="mtl-time-badge">${meal.time}</div>
+        <div class="mtl-info">
+          <div class="mtl-name">${meal.name||'Namnlös måltid'}</div>
+          ${meal.desc?`<div class="mtl-desc-preview">${meal.desc}</div>`:''}
+          ${pills}
+        </div>
+        <div class="mtl-kcal-badge">${meal.kcal||0}<span> kcal</span></div>
+        <div class="mtl-chevron">›</div>
+      </div>
+      <div class="mtl-edit-area" style="display:${isOpen?'block':'none'};" id="edit-${mode}-${meal.id}">
+        <div class="edit-row-top">
+          <input class="edit-time-input" type="time" value="${meal.time}" onchange="${updateFn}(${meal.id},'time',this.value)">
+          <input class="edit-name-input" type="text" value="${meal.name||''}" placeholder="Namn..." oninput="${updateFn}(${meal.id},'name',this.value)">
+          <button class="edit-del-btn" onclick="${delFn}(${meal.id})">✕</button>
+        </div>
+        <textarea class="edit-desc-input" placeholder="Vad äter du?" oninput="${updateFn}(${meal.id},'desc',this.value)">${meal.desc||''}</textarea>
+        <div class="edit-macro-grid">
+          <div class="emg-item"><div class="emg-label" style="color:#004D98;">Protein g</div>
+            <input class="emg-input" type="number" inputmode="decimal" min="0" placeholder="0" value="${meal.protein||''}" oninput="${macroFn}(${meal.id},'protein',this.value)"></div>
+          <div class="emg-item"><div class="emg-label" style="color:#1a6b3a;">Kolh g</div>
+            <input class="emg-input" type="number" inputmode="decimal" min="0" placeholder="0" value="${meal.kolh||''}" oninput="${macroFn}(${meal.id},'kolh',this.value)"></div>
+          <div class="emg-item"><div class="emg-label" style="color:#7a5c00;">Fett g</div>
+            <input class="emg-input" type="number" inputmode="decimal" min="0" placeholder="0" value="${meal.fett||''}" oninput="${macroFn}(${meal.id},'fett',this.value)"></div>
+          <div class="emg-item"><div class="emg-label" style="color:var(--muted);">Kcal</div>
+            <div class="emg-kcal" id="kcal-${mode}-${meal.id}">${meal.kcal||0}</div></div>
+        </div>
+      </div>
+    </div>
+  </div>`;
+}
+
+function toggleTodayMeal(id) {
+  openTodayMealId = openTodayMealId===id ? null : id;
+  renderTodayPlan();
+}
+function updateTodayField(id,field,value) {
+  const m=todayMealPlan.find(x=>x.id===id); if(!m) return; m[field]=value; saveTodayMeals();
+}
+function updateTodayMacro(id,field,value) {
+  const m=todayMealPlan.find(x=>x.id===id); if(!m) return;
+  m[field]=parseFloat(value)||0;
+  m.kcal=Math.round((m.protein||0)*4+(m.kolh||0)*4+(m.fett||0)*9);
+  const el=document.getElementById(`kcal-today-${id}`); if(el) el.textContent=m.kcal;
+  saveTodayMeals(); updateMacroSummaryFor(todayMealPlan,true);
+}
+function deleteTodayMeal(id) {
+  openTodayMealId=null; todayMealPlan=todayMealPlan.filter(m=>m.id!==id);
+  saveTodayMeals(); renderTodayPlan();
+}
+function addMeal(mode) {
+  if (mode==='idag') {
+    const newId=nextTodayId++;
+    todayMealPlan.push({id:newId,time:'12:00',name:'',desc:'',kcal:0,protein:0,kolh:0,fett:0});
+    openTodayMealId=newId; saveTodayMeals(); renderTodayPlan();
+    setTimeout(()=>{ const el=document.getElementById(`mtl-today-${newId}`); if(el) el.scrollIntoView({behavior:'smooth',block:'center'}); },80);
+  } else {
+    const newId=nextMealId++;
+    mealPlan.push({id:newId,time:'12:00',name:'',desc:'',kcal:0,protein:0,kolh:0,fett:0});
+    openMealId=newId; saveMeals(); renderMealPlan();
+    setTimeout(()=>{ const el=document.getElementById(`mtl-plan-${newId}`); if(el) el.scrollIntoView({behavior:'smooth',block:'center'}); },80);
+  }
+}
+
+
+function showHistory(i) {
+  const h=analysisHistory[i];
+  renderResult(h.result);
+  document.getElementById('resultCard').classList.add('visible');
+  document.getElementById('resultCard').scrollIntoView({behavior:'smooth'});
+}
+</script>
+</body>
+</html>
